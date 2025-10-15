@@ -13,9 +13,11 @@ app.set('trust proxy', true);
 app.use(morgan('tiny'));
 app.use(express.json());
 
-// --- Serve static assets from /public ---
+// --- Serve static assets ---
 const publicDir = path.join(__dirname, 'public');
+const imagesDir = path.join(__dirname, 'Images'); // <- root Images folder
 app.use(express.static(publicDir, { extensions: ['html'] }));
+app.use('/Images', express.static(imagesDir));    // <- expose /Images publicly
 
 // --- Serve index.html from /views as root ---
 const indexPath = path.join(__dirname, 'views', 'index.html');
@@ -27,10 +29,13 @@ app.get('/readyz', (_req, res) => res.status(200).send('ready'));
 // Root route → serve /views/index.html
 app.get('/', (_req, res) => res.sendFile(indexPath));
 
-// All other routes → fallback to index.html (for SPA)
+// All other routes → fallback to index.html (for SPA routing)
 app.get('*', (_req, res) => res.sendFile(indexPath));
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[BOOT] Listening on port ${PORT}, serving views/index.html`);
+  console.log(`[BOOT] Listening on port ${PORT}`);
+  console.log(`Static /public -> ${publicDir}`);
+  console.log(`Static /Images -> ${imagesDir}`);
+  console.log(`Root file -> ${indexPath}`);
 });
