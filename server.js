@@ -1,36 +1,36 @@
 // server.js
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const morgan = require('morgan');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Trust Cloud Run proxies
 app.set('trust proxy', true);
+
+// Middleware
 app.use(morgan('tiny'));
 app.use(express.json());
 
-// Prefer /public if it exists AND has index.html; else use repo root
+// --- Serve static assets from /public ---
 const publicDir = path.join(__dirname, 'public');
-const rootIndex = path.join(__dirname, 'index.html');
-const publicIndex = path.join(publicDir, 'index.html');
+app.use(express.static(publicDir, { extensions: ['html'] }));
 
-const usePublic = fs.existsSync(publicDir) && fs.existsSync(publicIndex);
-const staticDir = usePublic ? publicDir : __dirname;
-const fallbackIndex = usePublic ? publicIndex : rootIndex;
+// --- Serve index.html from /views as root ---
+const indexPath = path.join(__dirname, 'views', 'index.html');
 
-console.log('[BOOT] staticDir =', staticDir);
-app.use(express.static(staticDir, { extensions: ['html'] }));
-
+// Health checks
 app.get('/healthz', (_req, res) => res.status(200).send('ok'));
 app.get('/readyz', (_req, res) => res.status(200).send('ready'));
 
-app.get('*', (req, res, next) => {
-  if (!req.path.includes('.')) return res.sendFile(fallbackIndex);
-  return next();
-});
+// Root route → serve /views/index.html
+app.get('/', (_req, res) => res.sendFile(indexPath));
 
-app.listen(PORT, '0.0.0.0', () =>
-  console.log(`[BOOT] Listening on http://0.0.0.0:${PORT}`)
-);
+// All other routes → fallback to index.html (for SPA)
+app.get('*', (_req, res) => res.sendFile(indexPath));
+
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[BOOT] Listening on port ${PORT}, serving views/index.html`);
+});
