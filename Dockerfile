@@ -1,22 +1,18 @@
-# Use small, secure base
+# syntax=docker/dockerfile:1
 FROM node:20-alpine
 
-# Create app dir
 WORKDIR /usr/src/app
 
-# Install deps first (better caching)
+# Install deps first for better caching
 COPY package*.json ./
-RUN npm ci --omit=dev || npm ci
+# Try fast + reproducible; if no lockfile, fallback cleanly
+RUN npm ci --omit=dev || npm install --omit=dev
 
-# Copy app
+# Copy the rest of the app
 COPY . .
 
-# Environment
 ENV NODE_ENV=production
 ENV PORT=8080
-
-# Cloud Run expects the container to listen on $PORT
 EXPOSE 8080
 
-# Start command
 CMD ["npm", "start"]
