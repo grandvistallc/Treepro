@@ -10,19 +10,19 @@ app.set('trust proxy', true);
 app.use(morgan('tiny'));
 app.use(express.json());
 
-// Your HTML files are in the repo root; serve from here
-app.use(express.static(__dirname, { extensions: ['html'] }));
+// ✅ Serve static files from /public
+app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
-// Health checks
+// Health checks (Cloud Run friendly)
 app.get('/healthz', (_req, res) => res.status(200).send('ok'));
 app.get('/readyz', (_req, res) => res.status(200).send('ready'));
 
-// SPA fallback to index.html (safe even if not SPA)
-app.get('*', (req, res) => {
+// ✅ Fallback to /public/index.html for non-file routes
+app.get('*', (req, res, next) => {
   if (!req.path.includes('.')) {
-    return res.sendFile(path.join(__dirname, 'index.html'));
+    return res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
-  return res.status(404).send('Not found');
+  return next();
 });
 
 app.listen(PORT, '0.0.0.0', () =>
