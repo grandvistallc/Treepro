@@ -15,27 +15,32 @@ app.use(express.json());
 
 // --- Serve static assets ---
 const publicDir = path.join(__dirname, 'public');
-const imagesDir = path.join(__dirname, 'Images'); // <- root Images folder
+const imagesDir = path.join(__dirname, 'Images'); // root Images folder
 app.use(express.static(publicDir, { extensions: ['html'] }));
-app.use('/Images', express.static(imagesDir));    // <- expose /Images publicly
+app.use('/Images', express.static(imagesDir));    // expose /Images publicly
 
 // --- Serve index.html from /views as root ---
 const indexPath = path.join(__dirname, 'views', 'index.html');
+const contactPath = path.join(publicDir, 'contact.html'); // <- contact page
 
-// Health checks
+// --- Health checks ---
 app.get('/healthz', (_req, res) => res.status(200).send('ok'));
 app.get('/readyz', (_req, res) => res.status(200).send('ready'));
 
-// Root route → serve /views/index.html
+// --- Root route (views/index.html) ---
 app.get('/', (_req, res) => res.sendFile(indexPath));
 
-// All other routes → fallback to index.html (for SPA routing)
+// --- Contact page route (public/contact.html) ---
+app.get('/contact', (_req, res) => res.sendFile(contactPath));
+
+// --- All other routes → fallback to index.html ---
 app.get('*', (_req, res) => res.sendFile(indexPath));
 
-// Start server
+// --- Start server ---
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[BOOT] Listening on port ${PORT}`);
   console.log(`Static /public -> ${publicDir}`);
   console.log(`Static /Images -> ${imagesDir}`);
   console.log(`Root file -> ${indexPath}`);
+  console.log(`Contact file -> ${contactPath}`);
 });
