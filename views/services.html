@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree Services | TreePro Services Twin Cities</title>
+  <meta name="description" content="Professional tree services in the Twin Cities. Get your free estimate for tree removal, trimming, pruning, stump grinding, and premium firewood sales. Licensed and insured.">
+
+  <!-- Favicon - Icon displayed in browser tab and bookmarks -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SWCX8FXK49"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SWCX8FXK49');
+    gtag('config', 'AW-16997068616');
+  </script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    /* Variables */
+    :root {
+      --green: #10b981;
+      --green-dark: #059669;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-900: #0f172a;
+      --gray-600: #64748b;
+      --orange: #F97316;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--gray-900);
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    }
+
+    /* Header */
+    .navbar {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--gray-900);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Services Container */
+    .services-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .services-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+    }
+
+    .services-subtitle {
+      font-size: 1.25rem;
+      color: var(--gray-600);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Package Grid */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Package Cards */
+    .package-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .package-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+    }
+
+    .package-card.selected {
+      border-color: var(--orange);
+      box-shadow: 0 16px 48px rgba(249, 115, 22, 0.2);
+      transform: translateY(-4px);
+    }
+
+    /* Package Headers */
+    .package-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .package-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.5rem;
+      color: white;
+    }
+
+    .package-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .package-subtitle {
+      color: var(--gray-600);
+      font-size: 1rem;
+    }
+
+    /* Pricing */
+    .package-pricing {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .package-price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--green);
+      display: block;
+    }
+
+    .price-label {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      margin-top: 0.25rem;
+    }
+
+    /* Package Features */
+    .package-features {
+      flex-grow: 1;
+      margin-bottom: 2rem;
+    }
+
+    .features-list {
+      list-style: none;
+    }
+
+    .features-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .feature-check {
+      color: var(--green);
+      font-weight: bold;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    /* Tree Size Options */
+    .tree-size-options {
+      margin: 1.5rem 0;
+    }
+
+    .options-label {
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .size-options {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .size-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .size-option:hover {
+      border-color: var(--green);
+      background: #f0fdf4;
+    }
+
+    .size-option.selected {
+      border-color: var(--orange);
+      background: #fff7ed;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+    }
+
+    .size-option input[type="radio"] {
+      margin: 0;
+      accent-color: var(--orange);
+    }
+
+    .size-info {
+      flex-grow: 1;
+    }
+
+    .size-name {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .size-description {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+    }
+
+    .size-price {
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    /* Add-On Options */
+    .add-on-options {
+      margin: 1.5rem 0;
+    }
+
+    .add-on-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #f9fafb;
+    }
+
+    .add-on-option:hover {
+      border-color: var(--green);
+      background: #f0fdf4;
+    }
+
+    .add-on-option.selected {
+      border-color: var(--green);
+      background: #f0fdf4;
+      box-shadow: 0 0 0 1px var(--green);
+    }
+
+    .add-on-option input[type="checkbox"] {
+      margin: 0;
+      accent-color: var(--green);
+      transform: scale(1.2);
+    }
+
+    .add-on-info {
+      flex-grow: 1;
+    }
+
+    .add-on-name {
+      font-weight: 600;
+      color: var(--gray-900);
+      font-size: 0.95rem;
+    }
+
+    .add-on-description {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      margin-top: 0.25rem;
+    }
+
+    .add-on-price {
+      font-weight: 700;
+      color: var(--green);
+      font-size: 0.9rem;
+    }
+
+    /* Property Size Options */
+    .property-size-options {
+      margin: 1.5rem 0;
+    }
+
+    /* Urgency Options */
+    .urgency-options {
+      margin: 1.5rem 0;
+    }
+
+    .urgency-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      margin-bottom: 0.75rem;
+    }
+
+    .urgency-option:hover {
+      border-color: var(--green);
+      background: #f0fdf4;
+    }
+
+    .urgency-option.selected {
+      border-color: var(--orange);
+      background: #fff7ed;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+    }
+
+    .urgency-option input[type="radio"] {
+      margin: 0;
+      accent-color: var(--orange);
+    }
+
+    /* Package Buttons */
+    .package-button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .package-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    .package-button.selected {
+      background: linear-gradient(135deg, var(--orange) 0%, #ea580c 100%);
+    }
+
+    /* Price Summary */
+    .price-summary {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 100px;
+      margin-top: 2rem;
+    }
+
+    .summary-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .summary-item:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .summary-label {
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+
+    .summary-price {
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .total-price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--green);
+      text-align: center;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: #f0fdf4;
+      border-radius: 12px;
+    }
+
+    .checkout-button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+      border: none;
+      padding: 1.25rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .checkout-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    .checkout-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .services-container {
+        padding: 1rem;
+      }
+
+      .packages-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .package-card {
+        padding: 1.5rem;
+      }
+
+      .services-title {
+        font-size: 2.5rem;
+      }
+
+      .services-subtitle {
+        font-size: 1.125rem;
+      }
+
+      .price-summary {
+        position: static;
+        margin-top: 2rem;
+      }
+    }
+
+    /* Popular Badge */
+    .popular-badge {
+      position: absolute;
+      top: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    /* Add relative positioning to cards that have badges */
+    .popular-package {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🌳</div>
+        <span>TreePro Services</span>
+      </a>
+      <a href="tel:651-508-3194" class="cta-button">Call (651) 508-3194</a>
+    </div>
+  </nav>
+
+  <!-- Services Content -->
+  <div class="services-container">
+    <div class="services-header" data-aos="fade-up">
+      <h1 class="services-title">Tree Services</h1>
+      <p class="services-subtitle">Professional tree care solutions tailored to your needs. Select a service below to get started.</p>
+    </div>
+
+    <div class="packages-grid">
+      <!-- Firewood Sales -->
+      <div class="package-card" data-package="firewood-sales" data-aos="fade-up" data-aos-delay="100">
+        <div class="package-header">
+          <div class="package-icon">🪵</div>
+          <h3 class="package-title">Premium Firewood Sales</h3>
+          <p class="package-subtitle">Seasoned hardwood delivered to your door</p>
+        </div>
+
+        <div class="package-pricing">
+          <span class="package-price" id="firewood-sales-price">$180</span>
+          <div class="price-label">Per cord delivered</div>
+        </div>
+
+        <div class="urgency-options">
+          <label class="options-label">Cord Size:</label>
+          <div class="urgency-option" onclick="selectUrgency('firewood-sales', 'full-cord', 180)">
+            <input type="radio" name="firewood-size" value="full-cord" checked>
+            <div class="size-info">
+              <div class="size-name">Full Cord</div>
+              <div class="size-description">4'H × 4'D × 8'L (128 cubic feet)</div>
+            </div>
+            <div class="size-price">$180</div>
+          </div>
+          <div class="urgency-option" onclick="selectUrgency('firewood-sales', 'half-cord', 100)">
+            <input type="radio" name="firewood-size" value="half-cord">
+            <div class="size-info">
+              <div class="size-name">Half Cord</div>
+              <div class="size-description">4'H × 4'D × 4'L (64 cubic feet)</div>
+            </div>
+            <div class="size-price">$100</div>
+          </div>
+        </div>
+
+        <div class="package-features">
+          <ul class="features-list">
+            <li><span class="feature-check">✓</span> Seasoned 12+ months for optimal burning</li>
+            <li><span class="feature-check">✓</span> Premium oak, maple, and hickory hardwood</li>
+            <li><span class="feature-check">✓</span> Cut to standard 16-inch lengths</li>
+            <li><span class="feature-check">✓</span> Free delivery within 20 miles</li>
+            <li><span class="feature-check">✓</span> Contains 600-700 pieces per full cord</li>
+          </ul>
+        </div>
+
+        <button class="package-button" onclick="selectPackage('firewood-sales')">Select Firewood Package</button>
+      </div>
+
+      <!-- Tree Removal Service -->
+      <div class="package-card popular-package" data-package="tree-removal" data-aos="fade-up" data-aos-delay="200">
+        <div class="popular-badge">🪚 MOST POPULAR</div>
+        <div class="package-header">
+          <div class="package-icon">🪚</div>
+          <h3 class="package-title">Tree Removal</h3>
+          <p class="package-subtitle">Complete tree removal with stump grinding</p>
+        </div>
+
+        <div class="package-pricing">
+          <span class="package-price" id="tree-removal-price">$300</span>
+          <div class="price-label">Starting price</div>
+        </div>
+
+        <div class="tree-size-options">
+          <label class="options-label">Tree Size:</label>
+          <div class="size-options">
+            <div class="size-option" onclick="selectTreeSize('tree-removal', 'small', 300)">
+              <input type="radio" name="tree-removal-size" value="small" checked>
+              <div class="size-info">
+                <div class="size-name">Small Tree</div>
+                <div class="size-description">25 feet and under</div>
+              </div>
+              <div class="size-price">$300</div>
+            </div>
+            <div class="size-option" onclick="selectTreeSize('tree-removal', 'medium', 600)">
+              <input type="radio" name="tree-removal-size" value="medium">
+              <div class="size-info">
+                <div class="size-name">Medium Tree</div>
+                <div class="size-description">25-50 feet tall</div>
+              </div>
+              <div class="size-price">$600</div>
+            </div>
+            <div class="size-option" onclick="selectTreeSize('tree-removal', 'large', 1200)">
+              <input type="radio" name="tree-removal-size" value="large">
+              <div class="size-info">
+                <div class="size-name">Large Tree</div>
+                <div class="size-description">50+ feet tall</div>
+              </div>
+              <div class="size-price">$1,200</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-on-options">
+          <label class="options-label">Site Restoration Add-On:</label>
+          <div class="add-on-option" onclick="toggleAddOn('tree-removal', 'restoration', 50)">
+            <input type="checkbox" name="tree-removal-restoration" value="restoration" id="restoration-addon">
+            <div class="add-on-info">
+              <div class="add-on-name">🌱 Premium Site Restoration</div>
+              <div class="add-on-description">Fill stump hole with black dirt and seed for lawn recovery</div>
+            </div>
+            <div class="add-on-price">+$50</div>
+          </div>
+        </div>
+
+        <div class="package-features">
+          <ul class="features-list">
+            <li><span class="feature-check">✓</span> Safe tree removal with professional equipment</li>
+            <li><span class="feature-check">✓</span> Complete debris cleanup and hauling</li>
+            <li><span class="feature-check">✓</span> Stump grinding up to 6 inches below grade</li>
+            <li><span class="feature-check">✓</span> Site restoration and cleanup</li>
+            <li><span class="feature-check">✓</span> Fully insured and licensed</li>
+          </ul>
+        </div>
+
+        <button class="package-button" onclick="selectPackage('tree-removal')">Select Tree Removal</button>
+      </div>
+
+      <!-- Tree Trimming Service -->
+      <div class="package-card" data-package="tree-trimming" data-aos="fade-up" data-aos-delay="300">
+        <div class="package-header">
+          <div class="package-icon">✂️</div>
+          <h3 class="package-title">Tree Trimming & Pruning</h3>
+          <p class="package-subtitle">Professional trimming for health and safety</p>
+        </div>
+
+        <div class="package-pricing">
+          <span class="package-price" id="tree-trimming-price">$150</span>
+          <div class="price-label">Starting price</div>
+        </div>
+
+        <div class="tree-size-options">
+          <label class="options-label">Tree Size:</label>
+          <div class="size-options">
+            <div class="size-option" onclick="selectTreeSize('tree-trimming', 'small', 150)">
+              <input type="radio" name="tree-trimming-size" value="small" checked>
+              <div class="size-info">
+                <div class="size-name">Small Tree</div>
+                <div class="size-description">Under 30 feet tall</div>
+              </div>
+              <div class="size-price">$150</div>
+            </div>
+            <div class="size-option" onclick="selectTreeSize('tree-trimming', 'medium', 300)">
+              <input type="radio" name="tree-trimming-size" value="medium">
+              <div class="size-info">
+                <div class="size-name">Medium Tree</div>
+                <div class="size-description">30-60 feet tall</div>
+              </div>
+              <div class="size-price">$300</div>
+            </div>
+            <div class="size-option" onclick="selectTreeSize('tree-trimming', 'large', 500)">
+              <input type="radio" name="tree-trimming-size" value="large">
+              <div class="size-info">
+                <div class="size-name">Large Tree</div>
+                <div class="size-description">Over 60 feet tall</div>
+              </div>
+              <div class="size-price">$500</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="package-features">
+          <ul class="features-list">
+            <li><span class="feature-check">✓</span> Expert pruning for tree health and growth</li>
+            <li><span class="feature-check">✓</span> Removal of dead, diseased, and damaged branches</li>
+            <li><span class="feature-check">✓</span> Crown thinning and shaping</li>
+            <li><span class="feature-check">✓</span> Complete cleanup of all debris</li>
+            <li><span class="feature-check">✓</span> Certified arborist recommendations</li>
+          </ul>
+        </div>
+
+        <button class="package-button" onclick="selectPackage('tree-trimming')">Select Tree Trimming</button>
+      </div>
+    </div>
+
+    <!-- Price Summary -->
+    <div class="price-summary" id="price-summary" style="display: none;">
+      <h3 class="summary-title">Service Summary</h3>
+      <div id="summary-items"></div>
+      <div class="total-price" id="total-price">$0</div>
+      <a href="datetime.html" class="checkout-button" id="checkout-btn" style="display: none;">Continue to Booking</a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 600,
+      once: true
+    });
+
+    // Service data
+    const servicesData = {
+      packages: {
+        'tree-removal': {
+          name: 'Tree Removal',
+          icon: '🪚',
+          sizes: {
+            small: { name: 'Small Tree (Under 30ft)', price: 300 },
+            medium: { name: 'Medium Tree (30-60ft)', price: 600 },
+            large: { name: 'Large Tree (Over 60ft)', price: 1200 }
+          },
+          defaultSize: 'small'
+        },
+        'tree-trimming': {
+          name: 'Tree Trimming & Pruning',
+          icon: '✂️',
+          sizes: {
+            small: { name: 'Small Tree (Under 30ft)', price: 150 },
+            medium: { name: 'Medium Tree (30-60ft)', price: 300 },
+            large: { name: 'Large Tree (Over 60ft)', price: 500 }
+          },
+          defaultSize: 'small'
+        },
+        'firewood-sales': {
+          name: 'Premium Firewood Sales',
+          icon: '🪵',
+          urgency: {
+            'full-cord': { name: 'Full Cord (4\'H × 4\'D × 8\'L)', price: 180 },
+            'half-cord': { name: 'Half Cord (4\'H × 4\'D × 4\'L)', price: 100 }
+          },
+          defaultUrgency: 'full-cord'
+        }
+      }
+    };
+
+    let selectedPackage = null;
+    let currentPrice = 0;
+
+    function selectTreeSize(packageType, size, price) {
+      // Update visual selection
+      const options = document.querySelectorAll(`input[name="${packageType}-size"]`);
+      const optionDivs = document.querySelectorAll(`[data-package="${packageType}"] .size-option`);
+      
+      options.forEach(option => {
+        option.checked = option.value === size;
+      });
+      
+      optionDivs.forEach(div => {
+        div.classList.remove('selected');
+        if (div.onclick.toString().includes(`'${size}'`)) {
+          div.classList.add('selected');
+        }
+      });
+
+      // Update package price display
+      document.getElementById(`${packageType}-price`).textContent = `$${price}`;
+      
+      // Update selection if this package is currently selected
+      if (selectedPackage === packageType) {
+        updateSummary();
+      }
+    }
+
+    function selectUrgency(packageType, urgency, price) {
+      // Update visual selection based on package type
+      let inputName = '';
+      if (packageType === 'firewood-sales') {
+        inputName = 'firewood-size';
+      } else if (packageType === 'tree-removal') {
+        inputName = 'tree-size';
+      } else if (packageType === 'tree-trimming') {
+        inputName = 'trimming-size';
+      }
+      
+      const options = document.querySelectorAll(`input[name="${inputName}"]`);
+      const optionDivs = document.querySelectorAll('.urgency-option');
+      
+      options.forEach(option => {
+        option.checked = option.value === urgency;
+      });
+      
+      optionDivs.forEach(div => {
+        div.classList.remove('selected');
+        if (div.onclick.toString().includes(`'${urgency}'`)) {
+          div.classList.add('selected');
+        }
+      });
+
+      // Update package price display
+      document.getElementById(`${packageType}-price`).textContent = `$${price}`;
+      
+      // Update selection if this package is currently selected
+      if (selectedPackage === packageType) {
+        updateSummary();
+      }
+    }
+
+    function toggleAddOn(packageType, addOnType, price) {
+      const checkbox = document.querySelector(`input[name="${packageType}-${addOnType}"]`);
+      const addOnDiv = document.querySelector('.add-on-option');
+      
+      // Toggle checkbox state
+      checkbox.checked = !checkbox.checked;
+      
+      // Update visual selection
+      if (checkbox.checked) {
+        addOnDiv.classList.add('selected');
+      } else {
+        addOnDiv.classList.remove('selected');
+      }
+      
+      // Update selection if this package is currently selected
+      if (selectedPackage === packageType) {
+        updateSummary();
+      }
+    }
+
+    function selectPackage(packageType) {
+      selectedPackage = packageType;
+      
+      // Update visual selection
+      document.querySelectorAll('.package-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      
+      document.querySelectorAll('.package-button').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+
+      const selectedCard = document.querySelector(`[data-package="${packageType}"]`);
+      const selectedButton = selectedCard.querySelector('.package-button');
+      
+      selectedCard.classList.add('selected');
+      selectedButton.classList.add('selected');
+
+      updateSummary();
+      
+      // Scroll to summary on mobile
+      if (window.innerWidth <= 768) {
+        document.getElementById('price-summary').scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    }
+
+    function updateSummary() {
+      const summaryDiv = document.getElementById('price-summary');
+      const summaryItems = document.getElementById('summary-items');
+      const totalPriceDiv = document.getElementById('total-price');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      
+      if (!selectedPackage) {
+        summaryDiv.style.display = 'none';
+        return;
+      }
+
+      summaryDiv.style.display = 'block';
+      
+      let totalPrice = 0;
+      let summaryHTML = '';
+      
+      const packageData = servicesData.packages[selectedPackage];
+      
+      if (selectedPackage === 'firewood-sales') {
+        const selectedSize = document.querySelector('input[name="firewood-size"]:checked').value;
+        const sizeData = packageData.urgency[selectedSize];
+        
+        summaryHTML += `
+          <div class="summary-item">
+            <span class="summary-label">${packageData.name}</span>
+            <span class="summary-price">$${sizeData.price}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">${sizeData.name}</span>
+            <span class="summary-price">Delivered</span>
+          </div>
+        `;
+        
+        totalPrice = urgencyData.price;
+      } else {
+        const selectedSize = document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value;
+        const sizeData = packageData.sizes[selectedSize];
+        
+        summaryHTML += `
+          <div class="summary-item">
+            <span class="summary-label">${packageData.name}</span>
+            <span class="summary-price">$${sizeData.price}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">${sizeData.name}</span>
+            <span class="summary-price">Base Price</span>
+          </div>
+        `;
+        
+        totalPrice = sizeData.price;
+        
+        // Check for tree removal add-on
+        if (selectedPackage === 'tree-removal') {
+          const restorationCheckbox = document.querySelector('input[name="tree-removal-restoration"]');
+          if (restorationCheckbox && restorationCheckbox.checked) {
+            summaryHTML += `
+              <div class="summary-item">
+                <span class="summary-label">Site Restoration</span>
+                <span class="summary-price">+$50</span>
+              </div>
+            `;
+            totalPrice += 50;
+          }
+        }
+      }
+      
+      summaryItems.innerHTML = summaryHTML;
+      totalPriceDiv.textContent = `$${totalPrice}`;
+      currentPrice = totalPrice;
+      
+      checkoutBtn.style.display = 'block';
+      
+      // Store selection in sessionStorage for next page
+      sessionStorage.setItem('selectedService', JSON.stringify({
+        package: selectedPackage,
+        packageName: packageData.name,
+        size: selectedPackage === 'firewood-sales' ? document.querySelector(`input[name="firewood-size"]:checked`).value : 
+              selectedPackage !== 'firewood-sales' ? document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value : null,
+        urgency: selectedPackage === 'firewood-sales' ? document.querySelector('input[name="firewood-size"]:checked').value : null,
+        price: totalPrice
+      }));
+    }
+
+    // Initialize default selections
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial selected states for first options
+      document.querySelectorAll('.size-option:first-child, .urgency-option:first-child').forEach(option => {
+        option.classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>

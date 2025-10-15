@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | TreePro Services</title>
+  <meta name="description" content="Complete your tree service booking. Review your appointment details and confirm your professional tree service with TreePro Services.">
+
+  <!-- Favicon - Icon displayed in browser tab and bookmarks -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SWCX8FXK49"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SWCX8FXK49');
+    gtag('config', 'AW-16997068616');
+  </script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #10b981;
+      --green-dark: #059669;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-900: #0f172a;
+      --gray-600: #64748b;
+      --orange: #F97316;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--gray-900);
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--gray-900);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+    }
+
+    .main-content {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+    }
+
+    .sidebar {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--gray-600);
+      font-size: 1.125rem;
+    }
+
+    /* Order Summary */
+    .order-summary h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-section {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .summary-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .summary-label {
+      color: var(--gray-600);
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      color: var(--gray-900);
+      text-align: right;
+    }
+
+    .total-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green);
+      background: #f0fdf4;
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    /* Service Details */
+    .service-card {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--green);
+    }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .service-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .service-info h4 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.25rem;
+    }
+
+    .service-info p {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    /* Appointment Details */
+    .appointment-details {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--orange);
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    /* Customer Information */
+    .customer-info {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .info-label {
+      color: var(--gray-600);
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    /* Important Notice */
+    .notice {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: #92400e;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .notice h4 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .notice p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--gray-600);
+      border: 2px solid #e5e7eb;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gray-600);
+      color: var(--gray-900);
+    }
+
+    .confirm-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+      padding: 1.25rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .confirm-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .sidebar {
+        position: static;
+        order: -1;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🌳</div>
+        <span>TreePro Services</span>
+      </a>
+      <a href="tel:651-508-3194" class="btn btn-primary">Call (651) 508-3194</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <h1 class="title">Confirm Your Booking</h1>
+        <p class="subtitle">Please review your tree service appointment details before confirming.</p>
+      </div>
+
+      <!-- Service Details -->
+      <div class="service-card">
+        <div class="service-header">
+          <div class="service-icon" id="service-icon">🌳</div>
+          <div class="service-info">
+            <h4 id="service-name">Tree Service</h4>
+            <p id="service-description">Professional tree care</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appointment Details -->
+      <div class="appointment-details">
+        <h4 style="margin-bottom: 1rem; color: var(--gray-900); font-weight: 700;">Appointment Details</h4>
+        <div class="detail-item">
+          <span class="detail-label">Date:</span>
+          <span class="detail-value" id="appointment-date">-</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Time:</span>
+          <span class="detail-value" id="appointment-time">-</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Service Address:</span>
+          <span class="detail-value" id="service-address">-</span>
+        </div>
+      </div>
+
+      <!-- Customer Information -->
+      <div class="customer-info">
+        <h4 style="margin-bottom: 1rem; color: var(--gray-900); font-weight: 700;">Customer Information</h4>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Name</span>
+            <span class="info-value" id="customer-name">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Phone</span>
+            <span class="info-value" id="customer-phone">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value" id="customer-email">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Notes</span>
+            <span class="info-value" id="customer-notes">None provided</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Important Notice -->
+      <div class="notice">
+        <h4>📋 Important Information</h4>
+        <p>• A TreePro Services representative will contact you within 24 hours to confirm your appointment<br>
+        • Please ensure the work area is accessible and free from obstacles<br>
+        • All work is fully insured and performed by certified arborists<br>
+        • Weather conditions may affect scheduling - we'll notify you of any changes</p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <a href="datetime.html" class="btn btn-secondary">← Back to Schedule</a>
+        <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        
+        <div class="summary-section">
+          <div class="summary-item">
+            <span class="summary-label">Service:</span>
+            <span class="summary-value" id="summary-service">-</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Type:</span>
+            <span class="summary-value" id="summary-type">-</span>
+          </div>
+        </div>
+
+        <div class="summary-section">
+          <div class="summary-item">
+            <span class="summary-label">Base Price:</span>
+            <span class="summary-value" id="summary-price">$0</span>
+          </div>
+        </div>
+
+        <div class="total-price" id="total-amount">$0</div>
+
+        <a href="thankyou.html" class="confirm-btn" id="confirm-btn" style="display: none;">
+          Confirm & Book Service
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let bookingData = null;
+
+    function loadBookingData() {
+      const storedData = sessionStorage.getItem('bookingData');
+      if (storedData) {
+        bookingData = JSON.parse(storedData);
+        populateOrderSummary();
+        populateBookingDetails();
+      } else {
+        // Redirect back if no booking data
+        window.location.href = 'services.html';
+      }
+    }
+
+    function populateOrderSummary() {
+      if (!bookingData) return;
+
+      const service = bookingData.service;
+      
+      // Service icons
+      const iconMap = {
+        'tree-removal': '🪚',
+        'tree-trimming': '✂️',
+        'emergency-services': '🚨'
+      };
+
+      // Update summary
+      document.getElementById('summary-service').textContent = service.packageName;
+      document.getElementById('summary-price').textContent = `$${service.price}`;
+      document.getElementById('total-amount').textContent = `$${service.price}`;
+
+      // Update service type
+      let serviceType = 'Professional tree care';
+      if (service.size) {
+        const sizeNames = {
+          small: 'Small Tree (Under 30ft)',
+          medium: 'Medium Tree (30-60ft)',  
+          large: 'Large Tree (Over 60ft)'
+        };
+        serviceType = sizeNames[service.size];
+      } else if (service.urgency) {
+        const urgencyNames = {
+          immediate: 'Immediate Response',
+          'same-day': 'Same Day Service'
+        };
+        serviceType = urgencyNames[service.urgency];
+      }
+      document.getElementById('summary-type').textContent = serviceType;
+    }
+
+    function populateBookingDetails() {
+      if (!bookingData) return;
+
+      const service = bookingData.service;
+      const customer = bookingData.customer;
+      
+      // Service details
+      const iconMap = {
+        'tree-removal': '🪚',
+        'tree-trimming': '✂️',
+        'emergency-services': '🚨'
+      };
+
+      document.getElementById('service-icon').textContent = iconMap[service.package] || '🌳';
+      document.getElementById('service-name').textContent = service.packageName;
+      
+      let description = 'Professional tree care service';
+      if (service.size) {
+        const sizeNames = {
+          small: 'Small Tree (Under 30ft)',
+          medium: 'Medium Tree (30-60ft)',
+          large: 'Large Tree (Over 60ft)'
+        };
+        description = sizeNames[service.size];
+      } else if (service.urgency) {
+        const urgencyNames = {
+          immediate: 'Immediate Response (Within 2 hours)',
+          'same-day': 'Same Day Service (Within 8 hours)'
+        };
+        description = urgencyNames[service.urgency];
+      }
+      document.getElementById('service-description').textContent = description;
+
+      // Appointment details
+      const appointmentDate = new Date(bookingData.date);
+      document.getElementById('appointment-date').textContent = appointmentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      document.getElementById('appointment-time').textContent = bookingData.time;
+      document.getElementById('service-address').textContent = customer.address;
+
+      // Customer information
+      document.getElementById('customer-name').textContent = customer.name;
+      document.getElementById('customer-phone').textContent = customer.phone;
+      document.getElementById('customer-email').textContent = customer.email;
+      document.getElementById('customer-notes').textContent = customer.notes || 'None provided';
+    }
+
+    function confirmBooking() {
+      // Show confirm button in sidebar
+      document.getElementById('confirm-btn').style.display = 'block';
+      
+      // Scroll to confirm button on mobile
+      if (window.innerWidth <= 768) {
+        document.getElementById('confirm-btn').scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+
+      // Track conversion
+      gtag('event', 'conversion', {
+        'send_to': 'AW-16997068616/tree-service-booking',
+        'value': bookingData.service.price,
+        'currency': 'USD'
+      });
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      loadBookingData();
+    });
+  </script>
+</body>
+</html>

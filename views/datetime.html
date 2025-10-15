@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule Service | TreePro Services</title>
+  <meta name="description" content="Schedule your tree service appointment. Choose your preferred date and time for professional tree removal, trimming, or emergency services.">
+
+  <!-- Favicon - Icon displayed in browser tab and bookmarks -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SWCX8FXK49"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SWCX8FXK49');
+    gtag('config', 'AW-16997068616');
+  </script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #10b981;
+      --green-dark: #059669;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-900: #0f172a;
+      --gray-600: #64748b;
+      --orange: #F97316;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--gray-900);
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--gray-900);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: var(--gray-600);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Service Summary */
+    .service-summary {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid var(--green);
+    }
+
+    .summary-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+    }
+
+    .summary-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .service-info h3 {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .service-info p {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    .service-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    /* Scheduling Form */
+    .scheduling-form {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+    }
+
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .date-option {
+      padding: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .date-option:hover {
+      border-color: var(--green);
+      background: #f0fdf4;
+    }
+
+    .date-option.selected {
+      border-color: var(--orange);
+      background: #fff7ed;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+    }
+
+    .date-option.unavailable {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+
+    .date-option.unavailable:hover {
+      border-color: #e5e7eb;
+      background: #f8fafc;
+    }
+
+    .date-day {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .date-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .date-month {
+      font-size: 0.75rem;
+      color: var(--gray-600);
+      text-transform: uppercase;
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .time-option {
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      font-weight: 600;
+    }
+
+    .time-option:hover {
+      border-color: var(--green);
+      background: #f0fdf4;
+    }
+
+    .time-option.selected {
+      border-color: var(--orange);
+      background: #fff7ed;
+      color: var(--orange);
+    }
+
+    .time-option.unavailable {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+
+    .time-option.unavailable:hover {
+      border-color: #e5e7eb;
+      background: #f8fafc;
+    }
+
+    /* Contact Information */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--gray-600);
+      border: 2px solid #e5e7eb;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gray-600);
+      color: var(--gray-900);
+    }
+
+    /* Emergency Notice */
+    .emergency-notice {
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+      color: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .emergency-notice h3 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .emergency-notice p {
+      margin-bottom: 1rem;
+    }
+
+    .emergency-notice .btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .emergency-notice .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .date-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .summary-details {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🌳</div>
+        <span>TreePro Services</span>
+      </a>
+      <a href="tel:651-508-3194" class="btn btn-primary">Call (651) 508-3194</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="title">Schedule Your Tree Service</h1>
+      <p class="subtitle">Choose your preferred date and time for your professional tree service appointment.</p>
+    </div>
+
+    <!-- Emergency Notice (only shown for emergency services) -->
+    <div class="emergency-notice" id="emergency-notice" style="display: none;">
+      <h3>🚨 Need Emergency Service?</h3>
+      <p>For immediate assistance with fallen trees or urgent tree hazards, call our emergency line now.</p>
+      <a href="tel:651-508-3194" class="btn">Call Emergency Line</a>
+    </div>
+
+    <!-- Service Summary -->
+    <div class="service-summary">
+      <h2 class="summary-title">Service Details</h2>
+      <div class="summary-details">
+        <div class="service-info">
+          <h3 id="service-name">Tree Service</h3>
+          <p id="service-description">Professional tree care service</p>
+        </div>
+        <div class="service-price" id="service-price">$0</div>
+      </div>
+    </div>
+
+    <!-- Scheduling Form -->
+    <div class="scheduling-form">
+      <div class="form-section">
+        <h3 class="section-title">Select Date</h3>
+        <div class="date-grid" id="date-grid">
+          <!-- Dates will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="section-title">Select Time</h3>
+        <div class="time-grid" id="time-grid">
+          <!-- Times will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="section-title">Contact Information</h3>
+        <div class="form-group">
+          <label for="name" class="form-label">Full Name *</label>
+          <input type="text" id="name" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="phone" class="form-label">Phone Number *</label>
+          <input type="tel" id="phone" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address *</label>
+          <input type="email" id="email" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="address" class="form-label">Service Address *</label>
+          <input type="text" id="address" class="form-input" placeholder="Street address where service will be performed" required>
+        </div>
+        <div class="form-group">
+          <label for="notes" class="form-label">Additional Notes</label>
+          <textarea id="notes" class="form-input form-textarea" placeholder="Any additional information about your tree service needs..."></textarea>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <a href="services.html" class="btn btn-secondary">← Back to Services</a>
+        <button type="button" class="btn btn-primary" id="continue-btn" onclick="continueToCheckout()" disabled>
+          Continue to Checkout →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedDate = null;
+    let selectedTime = null;
+    let serviceData = null;
+
+    // Load service data from sessionStorage
+    function loadServiceData() {
+      const storedData = sessionStorage.getItem('selectedService');
+      if (storedData) {
+        serviceData = JSON.parse(storedData);
+        updateServiceSummary();
+        
+        // Show emergency notice if it's an emergency service
+        if (serviceData.package === 'emergency-services') {
+          document.getElementById('emergency-notice').style.display = 'block';
+        }
+      } else {
+        // Redirect back to services if no service selected
+        window.location.href = 'services.html';
+      }
+    }
+
+    function updateServiceSummary() {
+      if (!serviceData) return;
+      
+      document.getElementById('service-name').textContent = serviceData.packageName;
+      document.getElementById('service-price').textContent = `$${serviceData.price}`;
+      
+      let description = 'Professional tree care service';
+      if (serviceData.size) {
+        const sizeNames = {
+          small: 'Small Tree (Under 30ft)',
+          medium: 'Medium Tree (30-60ft)',
+          large: 'Large Tree (Over 60ft)'
+        };
+        description = sizeNames[serviceData.size] || description;
+      } else if (serviceData.urgency) {
+        const urgencyNames = {
+          immediate: 'Immediate Response (Within 2 hours)',
+          'same-day': 'Same Day Service (Within 8 hours)'
+        };
+        description = urgencyNames[serviceData.urgency] || description;
+      }
+      
+      document.getElementById('service-description').textContent = description;
+    }
+
+    // Generate available dates (next 14 days, excluding Sundays for non-emergency)
+    function generateDates() {
+      const dateGrid = document.getElementById('date-grid');
+      const today = new Date();
+      const isEmergency = serviceData && serviceData.package === 'emergency-services';
+      
+      for (let i = 0; i < 14; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const dayName = dayNames[date.getDay()];
+        const dayNumber = date.getDate();
+        const monthName = monthNames[date.getMonth()];
+        
+        // Skip Sundays for non-emergency services
+        const isUnavailable = !isEmergency && date.getDay() === 0;
+        
+        const dateElement = document.createElement('div');
+        dateElement.className = `date-option ${isUnavailable ? 'unavailable' : ''}`;
+        dateElement.innerHTML = `
+          <div class="date-day">${dayName}</div>
+          <div class="date-number">${dayNumber}</div>
+          <div class="date-month">${monthName}</div>
+        `;
+        
+        if (!isUnavailable) {
+          dateElement.addEventListener('click', () => selectDate(date, dateElement));
+        }
+        
+        dateGrid.appendChild(dateElement);
+      }
+    }
+
+    // Generate available times
+    function generateTimes() {
+      const timeGrid = document.getElementById('time-grid');
+      const isEmergency = serviceData && serviceData.package === 'emergency-services';
+      
+      let times = [];
+      
+      if (isEmergency) {
+        // Emergency services available 24/7
+        times = [
+          '24/7', 'ASAP', 'Within 1hr', 'Within 2hrs',
+          '8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM'
+        ];
+      } else {
+        // Regular business hours
+        times = [
+          '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+          '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM',
+          '4:00 PM', '5:00 PM'
+        ];
+      }
+      
+      times.forEach(time => {
+        const timeElement = document.createElement('div');
+        timeElement.className = 'time-option';
+        timeElement.textContent = time;
+        timeElement.addEventListener('click', () => selectTime(time, timeElement));
+        timeGrid.appendChild(timeElement);
+      });
+    }
+
+    function selectDate(date, element) {
+      // Remove selection from other dates
+      document.querySelectorAll('.date-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Select this date
+      element.classList.add('selected');
+      selectedDate = date;
+      
+      checkFormCompletion();
+    }
+
+    function selectTime(time, element) {
+      // Remove selection from other times
+      document.querySelectorAll('.time-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Select this time
+      element.classList.add('selected');
+      selectedTime = time;
+      
+      checkFormCompletion();
+    }
+
+    function checkFormCompletion() {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const address = document.getElementById('address').value.trim();
+      
+      const isComplete = selectedDate && selectedTime && name && phone && email && address;
+      
+      document.getElementById('continue-btn').disabled = !isComplete;
+    }
+
+    function continueToCheckout() {
+      if (!selectedDate || !selectedTime) return;
+      
+      // Collect form data
+      const bookingData = {
+        service: serviceData,
+        date: selectedDate.toISOString(),
+        time: selectedTime,
+        customer: {
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          address: document.getElementById('address').value.trim(),
+          notes: document.getElementById('notes').value.trim()
+        }
+      };
+      
+      // Store booking data for checkout page
+      sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+      
+      // Redirect to checkout
+      window.location.href = 'checkout.html';
+    }
+
+    // Add event listeners to form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+      loadServiceData();
+      generateDates();
+      generateTimes();
+      
+      // Add input event listeners
+      const inputs = ['name', 'phone', 'email', 'address'];
+      inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', checkFormCompletion);
+      });
+    });
+  </script>
+</body>
+</html>
