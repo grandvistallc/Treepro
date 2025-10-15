@@ -10,14 +10,14 @@ app.set('trust proxy', true);
 app.use(morgan('tiny'));
 app.use(express.json());
 
-// ✅ Serve static files from /public
+// Serve /public exactly
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
-// Health checks (Cloud Run friendly)
+// Health checks
 app.get('/healthz', (_req, res) => res.status(200).send('ok'));
 app.get('/readyz', (_req, res) => res.status(200).send('ready'));
 
-// ✅ Fallback to /public/index.html for non-file routes
+// Fallback to /public/index.html for non-file routes
 app.get('*', (req, res, next) => {
   if (!req.path.includes('.')) {
     return res.sendFile(path.join(__dirname, 'public', 'index.html'));
