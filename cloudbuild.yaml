@@ -1,0 +1,45 @@
+# Build, push to Artifact Registry, and deploy to Cloud Run.
+# In your Cloud Build trigger, set these substitutions:
+# _PROJECT = your GCP project id
+# _REGION  = e.g., us-central1
+# _REPO    = Artifact Registry repo name (docker format), e.g., app-images
+# _SERVICE = Cloud Run service name, e.g., app
+
+substitutions:
+  _PROJECT: your-project-id
+  _REGION: us-central1
+  _REPO: app-images
+  _SERVICE: app
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_SERVICE}:$SHORT_SHA'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push
+      - '${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_SERVICE}:$SHORT_SHA'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - '${_SERVICE}'
+      - '--image=${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_SERVICE}:$SHORT_SHA'
+      - '--platform=managed'
+      - '--region=${_REGION}'
+      - '--allow-unauthenticated'   # remove for private service
+      - '--port=8080'
+      # Example: add env vars
+      # - '--set-env-vars=NODE_ENV=production,ANY_KEY=VALUE'
+
+images:
+  - '${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_SERVICE}:$SHORT_SHA'
