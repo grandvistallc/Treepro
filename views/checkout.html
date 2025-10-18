@@ -74,6 +74,11 @@
       text-decoration: none;
     }
 
+    .logo-img {
+      height: 80px;
+      width: auto;
+    }
+
     .logo-icon {
       width: 40px;
       height: 40px;
@@ -311,16 +316,17 @@
     }
 
     .btn {
-      padding: 1rem 2rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 12px;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-decoration: none;
       transition: all 0.2s;
       border: none;
       cursor: pointer;
       text-align: center;
-      flex: 1;
+      display: inline-block;
+      white-space: nowrap;
     }
 
     .btn-primary {
@@ -398,8 +404,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <div class="logo-icon">🌳</div>
-        <span>TreePro Services</span>
+        <img src="../Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
       </a>
       <a href="tel:651-508-3194" class="btn btn-primary">Call (651) 508-3194</a>
     </div>
@@ -615,21 +620,47 @@
     }
 
     function confirmBooking() {
-      // Show confirm button in sidebar
-      document.getElementById('confirm-btn').style.display = 'block';
+      // Prepare booking data to send to Google Sheet
+      const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+      const serviceData = JSON.parse(sessionStorage.getItem('selectedService'));
       
-      // Scroll to confirm button on mobile
-      if (window.innerWidth <= 768) {
-        document.getElementById('confirm-btn').scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }
+      const dataToSend = {
+        name: bookingData.customer.name,
+        phone: bookingData.customer.phone,
+        email: bookingData.customer.email,
+        serviceType: serviceData.packageName,
+        quantity: serviceData.quantity || 1,
+        treeSize: serviceData.size || '',
+        appointmentDate: bookingData.date,
+        appointmentTime: bookingData.time,
+        price: serviceData.price,
+        addOns: serviceData.discountPercent > 0 ? `${serviceData.discountPercent}% bulk discount` : 'None',
+        notes: bookingData.customer.notes || ''
+      };
+      
+      // Send to Google Apps Script
+      const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6_F7RcrDZmUcM9GFTS8xmJhRmyrP5QHHwmtmikg-NfXx4Ye2gIgEPbP-rmKw0CGZfuA/exec';
+      
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(dataToSend)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log('Booking saved to Google Sheet:', result);
+        // Redirect to thank you page
+        window.location.href = 'thankyou.html';
+      })
+      .catch(error => {
+        console.error('Error saving booking:', error);
+        // Still redirect to thank you page even if saving fails
+        window.location.href = 'thankyou.html';
+      });
 
       // Track conversion
       gtag('event', 'conversion', {
         'send_to': 'AW-16997068616/tree-service-booking',
-        'value': bookingData.service.price,
+        'value': serviceData.price,
         'currency': 'USD'
       });
     }
