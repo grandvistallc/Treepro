@@ -74,6 +74,11 @@
       text-decoration: none;
     }
 
+    .logo-img {
+      height: 80px;
+      width: auto;
+    }
+
     .logo-icon {
       width: 40px;
       height: 40px;
@@ -267,16 +272,17 @@
     }
 
     .btn {
-      padding: 1rem 2rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 12px;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-decoration: none;
       transition: all 0.2s;
       border: none;
       cursor: pointer;
       text-align: center;
-      min-width: 160px;
+      display: inline-block;
+      white-space: nowrap;
     }
 
     .btn-primary {
@@ -311,13 +317,13 @@
 
     .contact-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.5rem;
     }
 
     .contact-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.75rem;
     }
 
@@ -331,6 +337,11 @@
       justify-content: center;
       font-size: 1.25rem;
       color: white;
+      flex-shrink: 0;
+    }
+
+    .contact-details {
+      word-break: break-word;
     }
 
     .contact-details h4 {
@@ -342,6 +353,7 @@
     .contact-details p {
       color: var(--gray-600);
       font-size: 0.9rem;
+      word-break: break-all;
     }
 
     /* Mobile Styles */
@@ -383,8 +395,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <div class="logo-icon">🌳</div>
-        <span>TreePro Services</span>
+        <img src="../Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
       </a>
       <a href="tel:651-508-3194" class="btn btn-primary">Call (651) 508-3194</a>
     </div>
@@ -465,7 +476,7 @@
           <div class="contact-icon">✉️</div>
           <div class="contact-details">
             <h4>Email Support</h4>
-            <p>info@treeproservices.com</p>
+            <p>treeproremovals@gmail.com</p>
           </div>
         </div>
         <div class="contact-item">
@@ -473,13 +484,6 @@
           <div class="contact-details">
             <h4>Business Hours</h4>
             <p>Mon-Sat: 8AM-6PM</p>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">🚨</div>
-          <div class="contact-details">
-            <h4>Emergency Line</h4>
-            <p>24/7 Response Available</p>
           </div>
         </div>
       </div>
