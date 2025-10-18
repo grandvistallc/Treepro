@@ -76,6 +76,12 @@
       text-decoration: none;
     }
 
+    .logo-img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
     .logo-icon {
       width: 40px;
       height: 40px;
@@ -505,6 +511,62 @@
       transform: none;
     }
 
+    /* Quantity Selector */
+    .quantity-selector {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .qty-btn {
+      background: var(--green);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-btn:hover {
+      background: var(--green-dark);
+      transform: scale(1.05);
+    }
+
+    .qty-input {
+      width: 60px;
+      padding: 0.5rem;
+      text-align: center;
+      border: 2px solid var(--green);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .qty-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .qty-discount {
+      font-size: 0.875rem;
+      color: var(--orange);
+      font-weight: 600;
+    }
+
     /* Mobile Styles */
     @media (max-width: 768px) {
       .services-container {
@@ -518,6 +580,19 @@
 
       .package-card {
         padding: 1.5rem;
+      }
+
+      /* Mobile reordering: Tree Removal first */
+      .package-card:nth-child(1) {
+        order: 2;
+      }
+
+      .package-card:nth-child(2) {
+        order: 1;
+      }
+
+      .package-card:nth-child(3) {
+        order: 3;
       }
 
       .services-title {
@@ -565,8 +640,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <div class="logo-icon">🌳</div>
-        <span>TreePro Services</span>
+        <img src="../Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
       </a>
       <a href="tel:651-508-3194" class="cta-button">Call (651) 508-3194</a>
     </div>
@@ -615,8 +689,8 @@
 
         <div class="package-features">
           <ul class="features-list">
-            <li><span class="feature-check">✓</span> Seasoned 12+ months for optimal burning</li>
-            <li><span class="feature-check">✓</span> Premium oak, maple, and hickory hardwood</li>
+            <li><span class="feature-check">✓</span> Sourced from local tree removals</li>
+            <li><span class="feature-check">✓</span> Properly dried for optimal burning</li>
             <li><span class="feature-check">✓</span> Cut to standard 16-inch lengths</li>
             <li><span class="feature-check">✓</span> Free delivery within 20 miles</li>
             <li><span class="feature-check">✓</span> Contains 600-700 pieces per full cord</li>
@@ -667,6 +741,16 @@
               </div>
               <div class="size-price">$1,200</div>
             </div>
+          </div>
+        </div>
+
+        <div class="quantity-selector">
+          <label class="options-label">Number of Trees:</label>
+          <div class="quantity-controls">
+            <button type="button" class="qty-btn" onclick="decreaseQuantity('tree-removal')">−</button>
+            <input type="number" id="tree-removal-quantity" class="qty-input" value="1" min="1" max="20" onchange="updateQuantity('tree-removal')">
+            <button type="button" class="qty-btn" onclick="increaseQuantity('tree-removal')">+</button>
+            <span class="qty-discount" id="tree-removal-discount"></span>
           </div>
         </div>
 
@@ -735,6 +819,16 @@
               </div>
               <div class="size-price">$500</div>
             </div>
+          </div>
+        </div>
+
+        <div class="quantity-selector">
+          <label class="options-label">Number of Trees:</label>
+          <div class="quantity-controls">
+            <button type="button" class="qty-btn" onclick="decreaseQuantity('tree-trimming')">−</button>
+            <input type="number" id="tree-trimming-quantity" class="qty-input" value="1" min="1" max="20" onchange="updateQuantity('tree-trimming')">
+            <button type="button" class="qty-btn" onclick="increaseQuantity('tree-trimming')">+</button>
+            <span class="qty-discount" id="tree-trimming-discount"></span>
           </div>
         </div>
 
@@ -905,7 +999,7 @@
       selectedCard.classList.add('selected');
       selectedButton.classList.add('selected');
 
-      updateSummary();
+      updateSummaryWithQuantity();
       
       // Scroll to summary on mobile
       if (window.innerWidth <= 768) {
@@ -917,6 +1011,54 @@
     }
 
     function updateSummary() {
+      updateSummaryWithQuantity();
+    }
+
+    // Quantity selector functions
+    function increaseQuantity(packageType) {
+      const input = document.getElementById(`${packageType}-quantity`);
+      const currentValue = parseInt(input.value);
+      if (currentValue < 20) {
+        input.value = currentValue + 1;
+        updateQuantity(packageType);
+      }
+    }
+
+    function decreaseQuantity(packageType) {
+      const input = document.getElementById(`${packageType}-quantity`);
+      const currentValue = parseInt(input.value);
+      if (currentValue > 1) {
+        input.value = currentValue - 1;
+        updateQuantity(packageType);
+      }
+    }
+
+    function updateQuantity(packageType) {
+      const quantity = parseInt(document.getElementById(`${packageType}-quantity`).value);
+      const discountSpan = document.getElementById(`${packageType}-discount`);
+      
+      // Apply volume discounts
+      let discountPercent = 0;
+      if (quantity >= 3) {
+        discountPercent = 15; // 15% off for 3+ trees
+      } else if (quantity >= 2) {
+        discountPercent = 10; // 10% off for 2 trees
+      }
+      
+      // Update discount display
+      if (discountPercent > 0) {
+        discountSpan.textContent = `${discountPercent}% bulk discount applied`;
+      } else {
+        discountSpan.textContent = '';
+      }
+      
+      // Update summary if this package is selected
+      if (selectedPackage === packageType) {
+        updateSummaryWithQuantity();
+      }
+    }
+
+    function updateSummaryWithQuantity() {
       const summaryDiv = document.getElementById('price-summary');
       const summaryItems = document.getElementById('summary-items');
       const totalPriceDiv = document.getElementById('total-price');
@@ -927,6 +1069,16 @@
         return;
       }
 
+      const quantity = parseInt(document.getElementById(`${selectedPackage}-quantity`).value);
+      
+      // Calculate discount
+      let discountPercent = 0;
+      if (quantity >= 3) {
+        discountPercent = 15;
+      } else if (quantity >= 2) {
+        discountPercent = 10;
+      }
+      
       summaryDiv.style.display = 'block';
       
       let totalPrice = 0;
@@ -949,41 +1101,55 @@
           </div>
         `;
         
-        totalPrice = urgencyData.price;
+        totalPrice = sizeData.price;
       } else {
         const selectedSize = document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value;
         const sizeData = packageData.sizes[selectedSize];
         
+        let basePriceForQuantity = sizeData.price * quantity;
+        let discountAmount = basePriceForQuantity * (discountPercent / 100);
+        let finalPrice = basePriceForQuantity - discountAmount;
+        
         summaryHTML += `
           <div class="summary-item">
-            <span class="summary-label">${packageData.name}</span>
-            <span class="summary-price">$${sizeData.price}</span>
+            <span class="summary-label">${packageData.name} (x${quantity})</span>
+            <span class="summary-price">$${basePriceForQuantity}</span>
           </div>
           <div class="summary-item">
             <span class="summary-label">${sizeData.name}</span>
-            <span class="summary-price">Base Price</span>
+            <span class="summary-price">Each</span>
           </div>
         `;
         
-        totalPrice = sizeData.price;
+        if (discountPercent > 0) {
+          summaryHTML += `
+            <div class="summary-item">
+              <span class="summary-label">${discountPercent}% Bulk Discount</span>
+              <span class="summary-price">-$${discountAmount.toFixed(0)}</span>
+            </div>
+          `;
+        }
+        
+        totalPrice = finalPrice;
         
         // Check for tree removal add-on
         if (selectedPackage === 'tree-removal') {
           const restorationCheckbox = document.querySelector('input[name="tree-removal-restoration"]');
           if (restorationCheckbox && restorationCheckbox.checked) {
+            const restorationTotal = 50 * quantity;
             summaryHTML += `
               <div class="summary-item">
-                <span class="summary-label">Site Restoration</span>
-                <span class="summary-price">+$50</span>
+                <span class="summary-label">Site Restoration (x${quantity})</span>
+                <span class="summary-price">+$${restorationTotal}</span>
               </div>
             `;
-            totalPrice += 50;
+            totalPrice += restorationTotal;
           }
         }
       }
       
       summaryItems.innerHTML = summaryHTML;
-      totalPriceDiv.textContent = `$${totalPrice}`;
+      totalPriceDiv.textContent = `$${totalPrice.toFixed(0)}`;
       currentPrice = totalPrice;
       
       checkoutBtn.style.display = 'block';
@@ -992,9 +1158,11 @@
       sessionStorage.setItem('selectedService', JSON.stringify({
         package: selectedPackage,
         packageName: packageData.name,
+        quantity: quantity,
         size: selectedPackage === 'firewood-sales' ? document.querySelector(`input[name="firewood-size"]:checked`).value : 
               selectedPackage !== 'firewood-sales' ? document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value : null,
         urgency: selectedPackage === 'firewood-sales' ? document.querySelector('input[name="firewood-size"]:checked').value : null,
+        discountPercent: discountPercent,
         price: totalPrice
       }));
     }
