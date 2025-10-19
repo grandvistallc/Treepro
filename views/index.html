@@ -1331,10 +1331,29 @@
     fetch('services.html')
       .then(response => {
         console.log('services.html fetch result:', response.status, response.ok ? 'EXISTS' : 'NOT FOUND');
+        console.log('Final URL after redirects:', response.url);
       })
       .catch(error => {
         console.log('services.html fetch error:', error.message);
       });
+    
+    // Test different possible paths for services.html
+    const testPaths = [
+      'services.html',
+      './services.html',
+      '../services.html',
+      '/services.html'
+    ];
+    
+    testPaths.forEach(path => {
+      fetch(path)
+        .then(response => {
+          console.log(`Path "${path}": ${response.status} - ${response.ok ? 'EXISTS' : 'NOT FOUND'} - Final URL: ${response.url}`);
+        })
+        .catch(error => {
+          console.log(`Path "${path}": ERROR - ${error.message}`);
+        });
+    });
     
     // Modal functionality - Initialize after all HTML is loaded
     console.log('Initializing modals...');
@@ -1403,6 +1422,34 @@
       if (e.key === 'Escape') {
         closeModal();
       }
+    });
+
+    // Debug: Add click tracking for Get Free Estimate buttons
+    const getFreeEstimateButtons = document.querySelectorAll('a[href="services.html"]');
+    console.log('Found Get Free Estimate buttons:', getFreeEstimateButtons.length);
+    
+    // Log all href attributes and resolved URLs
+    getFreeEstimateButtons.forEach((button, index) => {
+      console.log(`Button ${index + 1}:`, {
+        rawHref: button.getAttribute('href'),
+        resolvedHref: button.href,
+        text: button.textContent.trim(),
+        target: button.target || 'default'
+      });
+      
+      button.addEventListener('click', function(e) {
+        console.log(`Get Free Estimate button ${index + 1} clicked:`, {
+          rawHref: this.getAttribute('href'),
+          resolvedHref: this.href,
+          actualDestination: this.href,
+          text: this.textContent.trim(),
+          target: this.target || 'default'
+        });
+        
+        // Let's also test if services.html actually exists relative to current page
+        const testUrl = new URL('services.html', window.location.href);
+        console.log('Expected services.html URL:', testUrl.href);
+      });
     });
   </script>
 </body>
