@@ -1327,6 +1327,9 @@
     console.log('Current directory:', window.location.pathname);
     console.log('Base URL:', document.baseURI);
     
+    // Simple test to ensure this code runs
+    console.log('JavaScript is running - timestamp:', new Date().toISOString());
+    
     // Test if services.html exists
     fetch('services.html')
       .then(response => {
@@ -1425,8 +1428,26 @@
     });
 
     // Debug: Add click tracking for Get Free Estimate buttons
+    console.log('=== BUTTON DEBUG START ===');
     const getFreeEstimateButtons = document.querySelectorAll('a[href="services.html"]');
     console.log('Found Get Free Estimate buttons:', getFreeEstimateButtons.length);
+    
+    // Also check for any buttons with "Get Free Estimate" text
+    const allLinks = document.querySelectorAll('a');
+    console.log('Total links on page:', allLinks.length);
+    
+    const estimateLinks = [];
+    allLinks.forEach((link, index) => {
+      if (link.textContent.includes('Get Free Estimate')) {
+        estimateLinks.push(link);
+        console.log(`Estimate link ${index}:`, {
+          text: link.textContent.trim(),
+          href: link.getAttribute('href'),
+          resolvedHref: link.href
+        });
+      }
+    });
+    console.log('Links containing "Get Free Estimate":', estimateLinks.length);
     
     // Log all href attributes and resolved URLs
     getFreeEstimateButtons.forEach((button, index) => {
