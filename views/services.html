@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tree Services | TreePro Services Twin Cities</title>
-  <meta name="description" content="Professional tree services in the Twin Cities. Get your free estimate for tree removal, trimming, pruning, stump grinding, and premium firewood sales. Licensed and insured.">
+  <meta name="description" content="Professional tree services in the Twin Cities. Get your free estimate for tree removal, trimming, pruning, stump grinding, and fall yard cleanup services. Licensed and insured.">
 
   <!-- Favicon - Icon displayed in browser tab and bookmarks -->
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -91,6 +91,30 @@
       align-items: center;
       justify-content: center;
       font-size: 1.25rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
+    /* Hide navigation links on mobile */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
     }
 
     .cta-button {
@@ -582,19 +606,6 @@
         padding: 1.5rem;
       }
 
-      /* Mobile reordering: Tree Removal first */
-      .package-card:nth-child(1) {
-        order: 2;
-      }
-
-      .package-card:nth-child(2) {
-        order: 1;
-      }
-
-      .package-card:nth-child(3) {
-        order: 3;
-      }
-
       .services-title {
         font-size: 2.5rem;
       }
@@ -640,8 +651,13 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <img src="../Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
+        <img src="/Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
       </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+      </ul>
       <a href="tel:651-508-3194" class="cta-button">Call (651) 508-3194</a>
     </div>
   </nav>
@@ -654,50 +670,69 @@
     </div>
 
     <div class="packages-grid">
-      <!-- Firewood Sales -->
-      <div class="package-card" data-package="firewood-sales" data-aos="fade-up" data-aos-delay="100">
+      <!-- Fall Yard Cleanup -->
+      <div class="package-card" data-package="yard-cleanup" data-aos="fade-up" data-aos-delay="100">
         <div class="package-header">
-          <div class="package-icon">🪵</div>
-          <h3 class="package-title">Premium Firewood Sales</h3>
-          <p class="package-subtitle">Seasoned hardwood delivered to your door</p>
+          <div class="package-icon">🍂</div>
+          <h3 class="package-title">Fall Yard Cleanup</h3>
+          <p class="package-subtitle">Complete seasonal cleanup and property preparation</p>
         </div>
 
         <div class="package-pricing">
-          <span class="package-price" id="firewood-sales-price">$180</span>
-          <div class="price-label">Per cord delivered</div>
+          <span class="package-price" id="yard-cleanup-price">$150</span>
+          <div class="price-label">Starting price</div>
         </div>
 
         <div class="urgency-options">
-          <label class="options-label">Cord Size:</label>
-          <div class="urgency-option" onclick="selectUrgency('firewood-sales', 'full-cord', 180)">
-            <input type="radio" name="firewood-size" value="full-cord" checked>
+          <label class="options-label">Property Size:</label>
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'small-property', 150)">
+            <input type="radio" name="yard-cleanup-size" value="small-property" checked>
             <div class="size-info">
-              <div class="size-name">Full Cord</div>
-              <div class="size-description">4'H × 4'D × 8'L (128 cubic feet)</div>
+              <div class="size-name">Small Property</div>
+              <div class="size-description">Under 0.5 acre</div>
             </div>
-            <div class="size-price">$180</div>
+            <div class="size-price">$150</div>
           </div>
-          <div class="urgency-option" onclick="selectUrgency('firewood-sales', 'half-cord', 100)">
-            <input type="radio" name="firewood-size" value="half-cord">
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'medium-property', 225)">
+            <input type="radio" name="yard-cleanup-size" value="medium-property">
             <div class="size-info">
-              <div class="size-name">Half Cord</div>
-              <div class="size-description">4'H × 4'D × 4'L (64 cubic feet)</div>
+              <div class="size-name">Medium Property</div>
+              <div class="size-description">0.5 - 1 acre</div>
             </div>
-            <div class="size-price">$100</div>
+            <div class="size-price">$225</div>
+          </div>
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'large-property', 300)">
+            <input type="radio" name="yard-cleanup-size" value="large-property">
+            <div class="size-info">
+              <div class="size-name">Large Property</div>
+              <div class="size-description">1+ acres</div>
+            </div>
+            <div class="size-price">$300</div>
+          </div>
+        </div>
+
+        <div class="quantity-selector">
+          <label class="options-label">Number of Cleanups:</label>
+          <div class="quantity-controls">
+            <button type="button" class="qty-btn" onclick="decreaseQuantity('yard-cleanup')">−</button>
+            <input type="number" id="yard-cleanup-quantity" class="qty-input" value="1" min="1" max="10" onchange="updateQuantity('yard-cleanup')">
+            <button type="button" class="qty-btn" onclick="increaseQuantity('yard-cleanup')">+</button>
+            <span class="qty-discount" id="yard-cleanup-discount"></span>
           </div>
         </div>
 
         <div class="package-features">
           <ul class="features-list">
-            <li><span class="feature-check">✓</span> Sourced from local tree removals</li>
-            <li><span class="feature-check">✓</span> Properly dried for optimal burning</li>
-            <li><span class="feature-check">✓</span> Cut to standard 16-inch lengths</li>
-            <li><span class="feature-check">✓</span> Free delivery within 20 miles</li>
-            <li><span class="feature-check">✓</span> Contains 600-700 pieces per full cord</li>
+            <li><span class="feature-check">✓</span> Complete leaf removal and disposal</li>
+            <li><span class="feature-check">✓</span> Branch and debris cleanup</li>
+            <li><span class="feature-check">✓</span> Basic gutter cleaning (ground level)</li>
+            <li><span class="feature-check">✓</span> Walkway and driveway clearing</li>
+            <li><span class="feature-check">✓</span> All organic waste hauled away</li>
+            <li><span class="feature-check">✓</span> 15% discount for 3+ cleanups</li>
           </ul>
         </div>
 
-        <button class="package-button" onclick="selectPackage('firewood-sales')">Select Firewood Package</button>
+        <button class="package-button" onclick="selectPackage('yard-cleanup')">Select Yard Cleanup</button>
       </div>
 
       <!-- Tree Removal Service -->
@@ -887,14 +922,15 @@
           },
           defaultSize: 'small'
         },
-        'firewood-sales': {
-          name: 'Premium Firewood Sales',
-          icon: '🪵',
+        'yard-cleanup': {
+          name: 'Fall Yard Cleanup',
+          icon: '🍂',
           urgency: {
-            'full-cord': { name: 'Full Cord (4\'H × 4\'D × 8\'L)', price: 180 },
-            'half-cord': { name: 'Half Cord (4\'H × 4\'D × 4\'L)', price: 100 }
+            'small-property': { name: 'Small Property (Under 0.5 acre)', price: 150 },
+            'medium-property': { name: 'Medium Property (0.5-1 acre)', price: 225 },
+            'large-property': { name: 'Large Property (1+ acres)', price: 300 }
           },
-          defaultUrgency: 'full-cord'
+          defaultUrgency: 'small-property'
         }
       }
     };
@@ -930,8 +966,8 @@
     function selectUrgency(packageType, urgency, price) {
       // Update visual selection based on package type
       let inputName = '';
-      if (packageType === 'firewood-sales') {
-        inputName = 'firewood-size';
+      if (packageType === 'yard-cleanup') {
+        inputName = 'yard-cleanup-size';
       } else if (packageType === 'tree-removal') {
         inputName = 'tree-size';
       } else if (packageType === 'tree-trimming') {
@@ -1086,22 +1122,46 @@
       
       const packageData = servicesData.packages[selectedPackage];
       
-      if (selectedPackage === 'firewood-sales') {
-        const selectedSize = document.querySelector('input[name="firewood-size"]:checked').value;
+      if (selectedPackage === 'yard-cleanup') {
+        const selectedSize = document.querySelector('input[name="yard-cleanup-size"]:checked').value;
         const sizeData = packageData.urgency[selectedSize];
+        const quantity = parseInt(document.getElementById('yard-cleanup-quantity').value);
+        
+        let unitPrice = sizeData.price;
+        let discount = 0;
+        
+        // Apply discount for 3+ cleanups
+        if (quantity >= 3) {
+          discount = 0.15; // 15% discount
+        }
+        
+        const subtotal = unitPrice * quantity;
+        const discountAmount = subtotal * discount;
+        const finalPrice = subtotal - discountAmount;
         
         summaryHTML += `
           <div class="summary-item">
             <span class="summary-label">${packageData.name}</span>
-            <span class="summary-price">$${sizeData.price}</span>
+            <span class="summary-price">$${unitPrice} each</span>
           </div>
           <div class="summary-item">
             <span class="summary-label">${sizeData.name}</span>
-            <span class="summary-price">Delivered</span>
-          </div>
-        `;
+            <span class="summary-price">×${quantity}</span>
+          </div>`;
         
-        totalPrice = sizeData.price;
+        if (discount > 0) {
+          summaryHTML += `
+            <div class="summary-item">
+              <span class="summary-label">Subtotal</span>
+              <span class="summary-price">$${subtotal}</span>
+            </div>
+            <div class="summary-item discount">
+              <span class="summary-label">Multi-visit Discount (15%)</span>
+              <span class="summary-price">-$${discountAmount.toFixed(2)}</span>
+            </div>`;
+        }
+        
+        totalPrice = finalPrice;
       } else {
         const selectedSize = document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value;
         const sizeData = packageData.sizes[selectedSize];
@@ -1159,9 +1219,9 @@
         package: selectedPackage,
         packageName: packageData.name,
         quantity: quantity,
-        size: selectedPackage === 'firewood-sales' ? document.querySelector(`input[name="firewood-size"]:checked`).value : 
-              selectedPackage !== 'firewood-sales' ? document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value : null,
-        urgency: selectedPackage === 'firewood-sales' ? document.querySelector('input[name="firewood-size"]:checked').value : null,
+        size: selectedPackage === 'yard-cleanup' ? document.querySelector(`input[name="yard-cleanup-size"]:checked`).value : 
+              selectedPackage !== 'yard-cleanup' ? document.querySelector(`input[name="${selectedPackage}-size"]:checked`).value : null,
+        urgency: selectedPackage === 'yard-cleanup' ? document.querySelector('input[name="yard-cleanup-size"]:checked').value : null,
         discountPercent: discountPercent,
         price: totalPrice
       }));
