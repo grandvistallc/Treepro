@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout | TreePro Services</title>
-  <meta name="description" content="Complete your tree service booking. Review your appointment details and confirm your professional tree service with TreePro Services.">
+  <meta name="description" content="Complete your tree service and yard cleanup booking. Review your appointment details and confirm your professional tree service with TreePro Services.">
 
   <!-- Favicon - Icon displayed in browser tab and bookmarks -->
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -88,6 +88,30 @@
       align-items: center;
       justify-content: center;
       font-size: 1.25rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
+    /* Hide navigation links on mobile */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
     }
 
     .container {
@@ -404,8 +428,13 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <img src="../Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
+        <img src="/Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
       </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+      </ul>
       <a href="tel:651-508-3194" class="btn btn-primary">Call (651) 508-3194</a>
     </div>
   </nav>
@@ -555,13 +584,19 @@
         const sizeNames = {
           small: 'Small Tree (Under 30ft)',
           medium: 'Medium Tree (30-60ft)',  
-          large: 'Large Tree (Over 60ft)'
+          large: 'Large Tree (Over 60ft)',
+          'small-property': 'Small Property (Under 0.5 acre)',
+          'medium-property': 'Medium Property (0.5-1 acre)',
+          'large-property': 'Large Property (1+ acres)'
         };
         serviceType = sizeNames[service.size];
       } else if (service.urgency) {
         const urgencyNames = {
           immediate: 'Immediate Response',
-          'same-day': 'Same Day Service'
+          'same-day': 'Same Day Service',
+          'small-property': 'Small Property (Under 0.5 acre)',
+          'medium-property': 'Medium Property (0.5-1 acre)',
+          'large-property': 'Large Property (1+ acres)'
         };
         serviceType = urgencyNames[service.urgency];
       }
@@ -578,6 +613,7 @@
       const iconMap = {
         'tree-removal': '🪚',
         'tree-trimming': '✂️',
+        'yard-cleanup': '🍂',
         'emergency-services': '🚨'
       };
 
@@ -589,13 +625,19 @@
         const sizeNames = {
           small: 'Small Tree (Under 30ft)',
           medium: 'Medium Tree (30-60ft)',
-          large: 'Large Tree (Over 60ft)'
+          large: 'Large Tree (Over 60ft)',
+          'small-property': 'Small Property (Under 0.5 acre)',
+          'medium-property': 'Medium Property (0.5-1 acre)',
+          'large-property': 'Large Property (1+ acres)'
         };
         description = sizeNames[service.size];
       } else if (service.urgency) {
         const urgencyNames = {
           immediate: 'Immediate Response (Within 2 hours)',
-          'same-day': 'Same Day Service (Within 8 hours)'
+          'same-day': 'Same Day Service (Within 8 hours)',
+          'small-property': 'Small Property (Under 0.5 acre)',
+          'medium-property': 'Medium Property (0.5-1 acre)',
+          'large-property': 'Large Property (1+ acres)'
         };
         description = urgencyNames[service.urgency];
       }
@@ -630,7 +672,7 @@
         email: bookingData.customer.email,
         serviceType: serviceData.packageName,
         quantity: serviceData.quantity || 1,
-        treeSize: serviceData.size || '',
+        propertySize: serviceData.size || '',
         appointmentDate: bookingData.date,
         appointmentTime: bookingData.time,
         price: serviceData.price,
@@ -647,12 +689,10 @@
       })
       .then(response => response.json())
       .then(result => {
-        console.log('Booking saved to Google Sheet:', result);
         // Redirect to thank you page
         window.location.href = 'thankyou.html';
       })
       .catch(error => {
-        console.error('Error saving booking:', error);
         // Still redirect to thank you page even if saving fails
         window.location.href = 'thankyou.html';
       });
