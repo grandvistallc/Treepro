@@ -70,6 +70,12 @@
       color: var(--gray-900);
       text-decoration: none;
     }
+    .logo-img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
     .logo-icon {
       width: 40px;
       height: 40px;
@@ -79,6 +85,23 @@
       align-items: center;
       justify-content: center;
       font-size: 1.25rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
     }
     .navbar .btn-secondary {
       background: var(--green);
@@ -159,19 +182,24 @@
     /* Responsive tweaks */
     @media (max-width: 768px) {
       .nav-container { padding: 1rem; }
+      .nav-links { display: none; }
       .cta-section { padding: 3rem 1rem; margin: 2rem 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar (unchanged) -->
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <div class="logo-icon">🌳</div>
-        <span>TreePro Services</span>
+        <img src="/Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
       </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+      </ul>
       <a href="tel:651-508-3194" class="btn btn-secondary">Call (651) 508-3194</a>
     </div>
   </nav>
