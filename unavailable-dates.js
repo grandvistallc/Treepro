@@ -78,16 +78,58 @@ class UnavailableDatesManager {
       return 'ALL DAY';
     }
     
-    // Parse time formats like "8:00 AM", "10:30 PM", etc.
+    // Check for time ranges like "9:00 AM - 12:00 PM" or "9:00 AM-12:00 PM"
+    const rangeMatch = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)\s*-\s*(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+    if (rangeMatch) {
+      const startTime = `${rangeMatch[1]}:${rangeMatch[2]} ${rangeMatch[3]}`;
+      const endTime = `${rangeMatch[4]}:${rangeMatch[5]} ${rangeMatch[6]}`;
+      return { type: 'range', start: startTime, end: endTime, original: timeStr };
+    }
+    
+    // Parse single time formats like "8:00 AM", "10:30 PM", etc.
     const timeMatch = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
     if (timeMatch) {
-      return timeStr; // Return normalized format
+      return { type: 'single', time: timeStr, original: timeStr };
     }
     
     return null;
   }
 
-  // Format date to YYYY-MM-DD for consistent storage
+  // Convert time string to minutes for easy comparison
+  timeToMinutes(timeStr) {
+    const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+    if (!match) return null;
+    
+    let hours = parseInt(match[1]);
+    const minutes = parseInt(match[2]);
+    const period = match[3];
+    
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+    
+    return hours * 60 + minutes;
+  }
+
+  // Generate all time slots that fall within a range
+  expandTimeRange(startTime, endTime) {
+    const allTimes = [
+      '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+      '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'
+    ];
+    
+    const startMinutes = this.timeToMinutes(startTime);
+    const endMinutes = this.timeToMinutes(endTime);
+    
+    if (startMinutes === null || endMinutes === null) return [];
+    
+    return allTimes.filter(time => {
+      const timeMinutes = this.timeToMinutes(time);
+      return timeMinutes !== null && timeMinutes >= startMinutes && timeMinutes <= endMinutes;
+    });
+  }
   formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -172,14 +214,32 @@ class UnavailableDatesManager {
             this.dateReasons.set(formattedDate, reason);
           }
         } else if (parsedTime) {
-          // Block specific time
-          if (!this.unavailableTimes.has(formattedDate)) {
-            this.unavailableTimes.set(formattedDate, new Set());
-          }
-          this.unavailableTimes.get(formattedDate).add(parsedTime);
-          
-          if (reason) {
-            this.dateReasons.set(`${formattedDate}_${parsedTime}`, reason);
+          if (parsedTime.type === 'range') {
+            // Block time range - expand to individual times
+            const timesToBlock = this.expandTimeRange(parsedTime.start, parsedTime.end);
+            
+            if (!this.unavailableTimes.has(formattedDate)) {
+              this.unavailableTimes.set(formattedDate, new Set());
+            }
+            
+            const timeSet = this.unavailableTimes.get(formattedDate);
+            timesToBlock.forEach(time => {
+              timeSet.add(time);
+              if (reason) {
+                this.dateReasons.set(`${formattedDate}_${time}`, `${reason} (${parsedTime.original})`);
+              }
+            });
+            
+          } else if (parsedTime.type === 'single') {
+            // Block specific single time
+            if (!this.unavailableTimes.has(formattedDate)) {
+              this.unavailableTimes.set(formattedDate, new Set());
+            }
+            this.unavailableTimes.get(formattedDate).add(parsedTime.time);
+            
+            if (reason) {
+              this.dateReasons.set(`${formattedDate}_${parsedTime.time}`, reason);
+            }
           }
         }
       }
