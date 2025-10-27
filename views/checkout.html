@@ -704,6 +704,13 @@
       const dateTimeDescription = `${formattedDate} at ${bookingData.time}`;
       const timeContext = getTimeContext(bookingData.time);
       
+      // Format date for unavailable dates sheet (MM/DD/YYYY format)
+      const unavailableDate = appointmentDate.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+      });
+      
       const dataToSend = {
         timestamp: new Date().toLocaleString('en-US'),
         name: bookingData.customer.name,
@@ -720,7 +727,11 @@
         price: serviceData.price,
         addOns: serviceData.discountPercent > 0 ? `${serviceData.discountPercent}% bulk discount` : 'None',
         notes: bookingData.customer.notes || 'None',
-        confirmationNumber: 'TPR' + Date.now().toString().substr(-6)
+        confirmationNumber: 'TPR' + Date.now().toString().substr(-6),
+        // Data for blocking the time slot
+        blockDate: unavailableDate,
+        blockTime: bookingData.time,
+        blockReason: `BOOKED - ${bookingData.customer.name}`
       };
       
       // Log the data being sent for debugging
