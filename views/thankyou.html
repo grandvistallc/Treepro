@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Booking Confirmed | TreePro Services</title>
+  <title>Appointment Confirmed | TreePro Services</title>
   <meta name="description" content="Your tree service appointment has been confirmed. Thank you for choosing TreePro Services for your professional tree care needs.">
 
   <!-- Favicon - Icon displayed in browser tab and bookmarks -->
@@ -30,6 +30,7 @@
       --gray-100: #f1f5f9;
       --gray-900: #0f172a;
       --gray-600: #64748b;
+      --gray-200: #e2e8f0;
       --orange: #F97316;
     }
 
@@ -90,424 +91,358 @@
       font-size: 1.25rem;
     }
 
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
     .container {
       max-width: 800px;
       margin: 0 auto;
       padding: 2rem;
-      text-align: center;
     }
 
-    /* Success Message */
-    .success-container {
+    .confirmation-container {
       background: white;
-      border-radius: 24px;
-      padding: 3rem 2rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
     .success-icon {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      background: var(--green);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto 2rem auto;
+      font-size: 2rem;
+    }
+
+    .confirmation-header {
+      margin-bottom: 2rem;
+    }
+
+    .confirmation-header h1 {
       font-size: 2.5rem;
-      color: white;
-      margin: 0 auto 2rem;
-      animation: bounce 0.6s ease-out;
-    }
-
-    @keyframes bounce {
-      0% {
-        transform: scale(0) rotate(0deg);
-      }
-      50% {
-        transform: scale(1.1) rotate(180deg);
-      }
-      100% {
-        transform: scale(1) rotate(360deg);
-      }
-    }
-
-    .success-title {
-      font-size: clamp(2rem, 4vw, 2.5rem);
       font-weight: 800;
       color: var(--gray-900);
       margin-bottom: 1rem;
     }
 
-    .success-subtitle {
+    .confirmation-header p {
       font-size: 1.125rem;
       color: var(--gray-600);
-      margin-bottom: 2rem;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      line-height: 1.6;
     }
 
-    /* Confirmation Details */
-    .confirmation-card {
-      background: #f8fafc;
-      border-radius: 16px;
+    .confirmation-details {
+      background: var(--gray-50);
+      border-radius: 12px;
       padding: 2rem;
       margin: 2rem 0;
       text-align: left;
-      border-left: 4px solid var(--green);
+      border: 1px solid var(--gray-200);
     }
 
     .confirmation-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .confirmation-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .confirmation-row:last-child {
+      border-bottom: none;
+    }
+
+    .confirmation-label {
+      font-weight: 600;
+      color: var(--gray-600);
+      min-width: 140px;
+    }
+
+    .confirmation-value {
+      font-weight: 500;
+      color: var(--gray-900);
+      flex: 1;
+      text-align: right;
+    }
+
+    .confirmation-number {
+      background: var(--green);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: inline-block;
+      margin: 1rem 0;
+    }
+
+    .next-steps {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border-left: 4px solid var(--green);
+    }
+
+    .next-steps h3 {
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--gray-900);
       margin-bottom: 1rem;
     }
 
-    .confirmation-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .confirmation-item:last-child {
-      border-bottom: none;
-    }
-
-    .confirmation-label {
-      color: var(--gray-600);
-      font-weight: 500;
-      flex: 1;
-    }
-
-    .confirmation-value {
-      font-weight: 600;
-      color: var(--gray-900);
-      text-align: right;
-      flex: 1;
-    }
-
-    /* Next Steps */
-    .next-steps {
-      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-      color: #92400e;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-      text-align: left;
-    }
-
-    .next-steps h3 {
-      font-weight: 700;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
     .next-steps ul {
       list-style: none;
+      padding: 0;
     }
 
     .next-steps li {
+      padding: 0.5rem 0;
       display: flex;
       align-items: flex-start;
       gap: 0.75rem;
-      margin-bottom: 0.75rem;
-      line-height: 1.5;
     }
 
-    .next-steps .check {
-      color: #059669;
-      font-weight: bold;
-      margin-top: 0.1rem;
-    }
-
-    /* Emergency Contact */
-    .emergency-contact {
-      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-      color: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-    }
-
-    .emergency-contact h3 {
+    .check {
+      color: var(--green);
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
     }
 
-    .emergency-contact p {
-      margin-bottom: 1rem;
-      opacity: 0.9;
-    }
-
-    .emergency-contact .btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.3);
+    .emergency-contact {
+      background: var(--orange);
       color: white;
-      padding: 0.75rem 1.5rem;
+      padding: 1.5rem;
       border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-block;
-      transition: all 0.2s;
+      margin: 1.5rem 0;
+      display: none;
     }
 
-    .emergency-contact .btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
-    }
-
-    /* Action Buttons */
-    .action-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 2rem 0;
+    .emergency-contact h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
     }
 
     .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
-      text-align: center;
       display: inline-block;
-      white-space: nowrap;
+      padding: 0.875rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      background: var(--green);
       color: white;
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+      background: var(--green-dark);
+      transform: translateY(-1px);
     }
 
     .btn-secondary {
       background: white;
       color: var(--gray-600);
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--gray-200);
     }
 
     .btn-secondary:hover {
-      border-color: var(--gray-600);
-      color: var(--gray-900);
+      border-color: var(--green);
+      color: var(--green);
     }
 
-    /* Contact Information */
-    .contact-info {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      text-align: left;
+    .actions {
+      margin-top: 2rem;
+      text-align: center;
     }
 
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .contact-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      color: white;
-      flex-shrink: 0;
-    }
-
-    .contact-details {
-      word-break: break-word;
-    }
-
-    .contact-details h4 {
-      font-weight: 600;
-      color: var(--gray-900);
-      margin-bottom: 0.25rem;
-    }
-
-    .contact-details p {
-      color: var(--gray-600);
-      font-size: 0.9rem;
-      word-break: break-all;
-    }
-
-    /* Mobile Styles */
     @media (max-width: 768px) {
       .container {
         padding: 1rem;
       }
 
-      .success-container {
+      .confirmation-container {
         padding: 2rem 1.5rem;
       }
 
-      .confirmation-item {
+      .confirmation-header h1 {
+        font-size: 2rem;
+      }
+
+      .confirmation-row {
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.5rem;
       }
 
       .confirmation-value {
         text-align: left;
       }
 
-      .action-buttons {
-        flex-direction: column;
-      }
-
       .btn {
+        display: block;
         width: 100%;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
+        margin: 0.5rem 0;
       }
     }
   </style>
 </head>
-
 <body>
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <img src="../Images/Logo.png" alt="TreePro Services Logo" class="logo-img">
+        <img src="Images/TreePro Services.png" alt="TreePro Services" class="logo-img">
       </a>
-      <a href="tel:651-508-3194" class="btn btn-primary">Call (651) 508-3194</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+      </ul>
     </div>
   </nav>
 
   <div class="container">
-    <!-- Success Message -->
-    <div class="success-container">
-      <div class="success-icon">✓</div>
-      <h1 class="success-title">Booking Confirmed!</h1>
-      <p class="success-subtitle">
-        Thank you for choosing TreePro Services. Your tree service appointment has been successfully scheduled.
-      </p>
+    <div class="confirmation-container">
+      <!-- Success Icon -->
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <!-- Confirmation Header -->
+      <div class="confirmation-header">
+        <h1>Appointment Confirmed!</h1>
+        <p>
+          Thank you for choosing TreePro Services. Your tree service appointment has been successfully scheduled.
+        </p>
+      </div>
 
       <!-- Confirmation Details -->
-      <div class="confirmation-card">
+      <div class="confirmation-details">
         <h3 class="confirmation-title">Appointment Details</h3>
-        <div class="confirmation-item">
-          <span class="confirmation-label">Service:</span>
-          <span class="confirmation-value" id="service-name">Tree Service</span>
+        
+        <div class="confirmation-row">
+          <span class="confirmation-label">Confirmation #:</span>
+          <span class="confirmation-value confirmation-number" id="confirmation-number">-</span>
         </div>
-        <div class="confirmation-item">
+        
+        <div class="confirmation-row">
+          <span class="confirmation-label">Service:</span>
+          <span class="confirmation-value" id="service-name">-</span>
+        </div>
+        
+        <div class="confirmation-row">
           <span class="confirmation-label">Date & Time:</span>
           <span class="confirmation-value" id="appointment-datetime">-</span>
         </div>
-        <div class="confirmation-item">
+        
+        <div class="confirmation-row">
           <span class="confirmation-label">Location:</span>
           <span class="confirmation-value" id="service-location">-</span>
         </div>
-        <div class="confirmation-item">
-          <span class="confirmation-label">Total Cost:</span>
-          <span class="confirmation-value" id="total-cost">$0</span>
-        </div>
-        <div class="confirmation-item">
-          <span class="confirmation-label">Confirmation #:</span>
-          <span class="confirmation-value" id="confirmation-number">-</span>
+        
+        <div class="confirmation-row">
+          <span class="confirmation-label">Estimated Cost:</span>
+          <span class="confirmation-value" id="total-cost">-</span>
         </div>
       </div>
-    </div>
 
-    <!-- Next Steps -->
-    <div class="next-steps">
-      <h3>📋 What Happens Next</h3>
-      <ul>
-        <li><span class="check">✓</span> A TreePro Services representative will contact you within 24 hours to confirm your appointment</li>
-        <li><span class="check">✓</span> We'll provide a more detailed time window for your service</li>
-        <li><span class="check">✓</span> Our certified arborists will arrive with all necessary equipment</li>
-        <li><span class="check">✓</span> We'll complete the work safely and clean up all debris</li>
-        <li><span class="check">✓</span> You'll receive a satisfaction follow-up after the service</li>
-      </ul>
-    </div>
+      <!-- Emergency Contact Notice -->
+      <div class="emergency-contact" id="emergency-contact">
+        <h4>🚨 Emergency Service Notice</h4>
+        <p>For immediate emergency tree services, please call us directly at <strong>(555) 123-TREE</strong></p>
+      </div>
 
-    <!-- Emergency Contact (only shown for emergency services) -->
-    <div class="emergency-contact" id="emergency-contact" style="display: none;">
-      <h3>🚨 Emergency Service Notice</h3>
-      <p>Your emergency service request has been prioritized. Our emergency response team will contact you within the next 2 hours.</p>
-      <a href="tel:651-508-3194" class="btn">Emergency Hotline: (651) 508-3194</a>
-    </div>
+      <!-- Next Steps -->
+      <div class="next-steps">
+        <h3>What happens next?</h3>
+        <ul>
+          <li><span class="check">✓</span> You'll receive a confirmation email with all the details within 5 minutes</li>
+          <li><span class="check">✓</span> A TreePro Services representative will contact you within 24 hours to confirm your appointment</li>
+          <li><span class="check">✓</span> We'll provide a more detailed time window for your service</li>
+          <li><span class="check">✓</span> Our certified arborists will arrive with all necessary equipment</li>
+          <li><span class="check">✓</span> We'll provide a detailed assessment and complete your tree service professionally</li>
+        </ul>
+      </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <a href="index.html" class="btn btn-primary">Back to Home</a>
-      <a href="services.html" class="btn btn-secondary">Book Another Service</a>
-    </div>
-
-    <!-- Contact Information -->
-    <div class="contact-info">
-      <h3 style="margin-bottom: 1.5rem; color: var(--gray-900); font-weight: 700; text-align: center;">Need to Make Changes?</h3>
-      <div class="contact-grid">
-        <div class="contact-item">
-          <div class="contact-icon">📞</div>
-          <div class="contact-details">
-            <h4>Call Us</h4>
-            <p>(651) 508-3194</p>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">✉️</div>
-          <div class="contact-details">
-            <h4>Email Support</h4>
-            <p>treeproremovals@gmail.com</p>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">🕐</div>
-          <div class="contact-details">
-            <h4>Business Hours</h4>
-            <p>Mon-Sat: 8AM-6PM</p>
-          </div>
-        </div>
+      <!-- Action Buttons -->
+      <div class="actions">
+        <a href="index.html" class="btn btn-primary">Return to Home</a>
+        <a href="services.html" class="btn btn-secondary">Book Another Service</a>
       </div>
     </div>
   </div>
 
   <script>
-    function loadConfirmationDetails() {
+    // Load booking data from sessionStorage
+    function loadBookingData() {
       const bookingData = sessionStorage.getItem('bookingData');
+      
       if (bookingData) {
         const booking = JSON.parse(bookingData);
         
-        // Update confirmation details
+        // Update service name
         document.getElementById('service-name').textContent = booking.service.packageName;
         
         const appointmentDate = new Date(booking.date);
-        const dateTimeString = appointmentDate.toLocaleDateString('en-US', {
+        const dateString = appointmentDate.toLocaleDateString('en-US', {
           weekday: 'long',
           year: 'numeric',
           month: 'long',
           day: 'numeric'
-        }) + ' at ' + booking.time;
-        document.getElementById('appointment-datetime').textContent = dateTimeString;
+        });
         
+        // Enhanced appointment display with time context
+        const timeContext = getAppointmentTimeContext(booking.time);
+        const enhancedDisplay = `
+          <div style="background: var(--green); color: white; padding: 1rem; border-radius: 8px; margin: 0.5rem 0;">
+            <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 0.5rem;">
+              📅 ${dateString}
+            </div>
+            <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 0.25rem;">
+              🕐 ${booking.time}
+            </div>
+            <div style="font-size: 0.9em; opacity: 0.9;">
+              ${timeContext}
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('appointment-datetime').innerHTML = enhancedDisplay;
         document.getElementById('service-location').textContent = booking.customer.address;
         document.getElementById('total-cost').textContent = `$${booking.service.price}`;
         
@@ -528,15 +463,34 @@
           'transaction_id': confirmationNumber
         });
         
-        // Clear booking data from storage
-        sessionStorage.removeItem('selectedService');
+        // Clear booking data
         sessionStorage.removeItem('bookingData');
+        sessionStorage.removeItem('selectedService');
+      } else {
+        // Redirect to services if no booking data
+        window.location.href = 'services.html';
       }
+    }
+
+    function getAppointmentTimeContext(time) {
+      const contexts = {
+        '8:00 AM': 'Early morning start - Our professional team will arrive promptly at 8:00 AM',
+        '9:00 AM': 'Morning service - Perfect timing to start your tree care project',
+        '10:00 AM': 'Mid-morning appointment - Ideal time for comprehensive tree services',
+        '11:00 AM': 'Late morning service - Excellent timing for outdoor tree work',
+        '12:00 PM': 'Midday appointment - Lunch time service slot for your convenience',
+        '1:00 PM': 'Early afternoon service - Productive afternoon timing for tree care',
+        '2:00 PM': 'Afternoon appointment - Great time for professional tree services',
+        '3:00 PM': 'Mid-afternoon service - Optimal timing for outdoor projects',
+        '4:00 PM': 'Late afternoon appointment - End of day service for your convenience'
+      };
+      
+      return contexts[time] || 'Professional tree service appointment scheduled';
     }
 
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
-      loadConfirmationDetails();
+      loadBookingData();
     });
   </script>
 </body>
