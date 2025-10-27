@@ -535,6 +535,14 @@
             <span class="summary-label">Base Price:</span>
             <span class="summary-value" id="summary-price">$0</span>
           </div>
+          <div class="summary-item" id="tax-row" style="display: none;">
+            <span class="summary-label">Sales Tax:</span>
+            <span class="summary-value" id="summary-tax">$0</span>
+          </div>
+          <div class="summary-item" id="tax-location" style="display: none; font-size: 0.8em; color: var(--gray-600);">
+            <span class="summary-label">Tax Location:</span>
+            <span class="summary-value" id="tax-county">-</span>
+          </div>
         </div>
 
         <div class="total-price" id="total-amount">$0</div>
@@ -561,6 +569,128 @@
       }
     }
 
+    // Tax calculation based on customer address
+    function calculateSalesTax(address, servicePrice) {
+      // Common county tax rates in Pennsylvania (adjust based on your state)
+      const countyTaxRates = {
+        'allegheny': 0.07,      // 7%
+        'philadelphia': 0.08,    // 8%
+        'montgomery': 0.06,     // 6%
+        'bucks': 0.06,          // 6%
+        'chester': 0.06,        // 6%
+        'delaware': 0.065,      // 6.5%
+        'lancaster': 0.06,      // 6%
+        'york': 0.06,           // 6%
+        'berks': 0.06,          // 6%
+        'lehigh': 0.065,        // 6.5%
+        'northampton': 0.065,   // 6.5%
+        'westmoreland': 0.06,   // 6%
+        'washington': 0.06,     // 6%
+        'beaver': 0.06,         // 6%
+        'butler': 0.06,         // 6%
+        'fayette': 0.06,        // 6%
+        'greene': 0.06,         // 6%
+        'indiana': 0.06,        // 6%
+        'armstrong': 0.06,      // 6%
+        'clarion': 0.06,        // 6%
+        'jefferson': 0.06,      // 6%
+        'forest': 0.06,         // 6%
+        'venango': 0.06,        // 6%
+        'mercer': 0.06,         // 6%
+        'lawrence': 0.06,       // 6%
+        'crawford': 0.06,       // 6%
+        'erie': 0.06,           // 6%
+        'warren': 0.06,         // 6%
+        'mckean': 0.06,         // 6%
+        'potter': 0.06,         // 6%
+        'tioga': 0.06,          // 6%
+        'bradford': 0.06,       // 6%
+        'susquehanna': 0.06,    // 6%
+        'wayne': 0.06,          // 6%
+        'pike': 0.06,           // 6%
+        'monroe': 0.06,         // 6%
+        'carbon': 0.06,         // 6%
+        'schuylkill': 0.06,     // 6%
+        'luzerne': 0.06,        // 6%
+        'lackawanna': 0.06,     // 6%
+        'wyoming': 0.06,        // 6%
+        'sullivan': 0.06,       // 6%
+        'columbia': 0.06,       // 6%
+        'montour': 0.06,        // 6%
+        'northumberland': 0.06, // 6%
+        'snyder': 0.06,         // 6%
+        'union': 0.06,          // 6%
+        'centre': 0.06,         // 6%
+        'clinton': 0.06,        // 6%
+        'lycoming': 0.06,       // 6%
+        'default': 0.06         // Default 6%
+      };
+
+      // Extract county from address (simple parsing)
+      let county = 'default';
+      let taxLocation = 'Standard Rate';
+      
+      if (address) {
+        const addressLower = address.toLowerCase();
+        
+        // Look for county names in the address
+        for (const [countyName, rate] of Object.entries(countyTaxRates)) {
+          if (countyName !== 'default' && addressLower.includes(countyName)) {
+            county = countyName;
+            taxLocation = countyName.charAt(0).toUpperCase() + countyName.slice(1) + ' County';
+            break;
+          }
+        }
+        
+        // Also check for common city names that indicate counties
+        const cityToCounty = {
+          'philadelphia': 'philadelphia',
+          'pittsburgh': 'allegheny',
+          'allentown': 'lehigh',
+          'erie': 'erie',
+          'reading': 'berks',
+          'scranton': 'lackawanna',
+          'bethlehem': 'northampton',
+          'lancaster': 'lancaster',
+          'harrisburg': 'dauphin',
+          'york': 'york',
+          'chester': 'chester',
+          'norristown': 'montgomery',
+          'wilkes-barre': 'luzerne'
+        };
+        
+        for (const [city, countyName] of Object.entries(cityToCounty)) {
+          if (addressLower.includes(city)) {
+            county = countyName;
+            taxLocation = city.charAt(0).toUpperCase() + city.slice(1) + ' (' + countyName.charAt(0).toUpperCase() + countyName.slice(1) + ' County)';
+            if (countyTaxRates[countyName]) {
+              county = countyName;
+            }
+            break;
+          }
+        }
+      }
+
+      const taxRate = countyTaxRates[county];
+      const taxAmount = parseFloat(servicePrice) * taxRate;
+      const totalAmount = parseFloat(servicePrice) + taxAmount;
+
+      // Update tax display
+      document.getElementById('tax-amount').textContent = `$${taxAmount.toFixed(2)}`;
+      document.getElementById('tax-location').textContent = taxLocation + ` (${(taxRate * 100).toFixed(1)}%)`;
+      document.getElementById('total-amount').textContent = `$${totalAmount.toFixed(2)}`;
+
+      // Store tax info for booking submission
+      if (bookingData) {
+        bookingData.tax = {
+          location: taxLocation,
+          rate: taxRate,
+          amount: taxAmount,
+          total: totalAmount
+        };
+      }
+    }
+
     function populateOrderSummary() {
       if (!bookingData) return;
 
@@ -576,7 +706,9 @@
       // Update summary
       document.getElementById('summary-service').textContent = service.packageName;
       document.getElementById('summary-price').textContent = `$${service.price}`;
-      document.getElementById('total-amount').textContent = `$${service.price}`;
+      
+      // Calculate and display tax
+      calculateSalesTax(bookingData.customer.address, service.price);
 
       // Update service type
       let serviceType = 'Professional tree care';
@@ -711,6 +843,11 @@
         year: 'numeric'
       });
       
+      // Get tax information from booking data
+      const taxInfo = bookingData.tax || {};
+      const taxAmount = taxInfo.amount || (parseFloat(serviceData.price) * 0.06);
+      const totalAmount = taxInfo.total || (parseFloat(serviceData.price) + taxAmount);
+      
       const dataToSend = {
         timestamp: new Date().toLocaleString('en-US'),
         name: bookingData.customer.name,
@@ -725,6 +862,10 @@
         appointmentDateTime: dateTimeDescription,
         timeContext: timeContext,
         price: serviceData.price,
+        taxLocation: taxInfo.location || 'Standard Rate',
+        taxRate: taxInfo.rate ? `${(taxInfo.rate * 100).toFixed(1)}%` : '6.0%',
+        taxAmount: taxAmount.toFixed(2),
+        totalAmount: totalAmount.toFixed(2),
         addOns: serviceData.discountPercent > 0 ? `${serviceData.discountPercent}% bulk discount` : 'None',
         notes: bookingData.customer.notes || 'None',
         confirmationNumber: 'TPR' + Date.now().toString().substr(-6),
@@ -754,10 +895,10 @@
         window.location.href = 'thankyou.html';
       });
 
-      // Track conversion
+      // Track conversion with total amount including tax
       gtag('event', 'conversion', {
         'send_to': 'AW-16997068616/tree-service-booking',
-        'value': serviceData.price,
+        'value': totalAmount,
         'currency': 'USD'
       });
     }
