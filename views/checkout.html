@@ -558,12 +558,22 @@
     let bookingData = null;
 
     function loadBookingData() {
+      console.log('Loading booking data...');
       const storedData = sessionStorage.getItem('bookingData');
+      console.log('Stored data:', storedData);
+      
       if (storedData) {
-        bookingData = JSON.parse(storedData);
-        populateOrderSummary();
-        populateBookingDetails();
+        try {
+          bookingData = JSON.parse(storedData);
+          console.log('Parsed booking data:', bookingData);
+          populateOrderSummary();
+          populateBookingDetails();
+        } catch (error) {
+          console.error('Error parsing booking data:', error);
+          window.location.href = 'services.html';
+        }
       } else {
+        console.log('No booking data found, redirecting to services');
         // Redirect back if no booking data
         window.location.href = 'services.html';
       }
@@ -675,10 +685,14 @@
       const taxAmount = parseFloat(servicePrice) * taxRate;
       const totalAmount = parseFloat(servicePrice) + taxAmount;
 
-      // Update tax display
-      document.getElementById('tax-amount').textContent = `$${taxAmount.toFixed(2)}`;
-      document.getElementById('tax-location').textContent = taxLocation + ` (${(taxRate * 100).toFixed(1)}%)`;
+      // Update tax display - show tax rows and update values
+      document.getElementById('summary-tax').textContent = `$${taxAmount.toFixed(2)}`;
+      document.getElementById('tax-county').textContent = taxLocation + ` (${(taxRate * 100).toFixed(1)}%)`;
       document.getElementById('total-amount').textContent = `$${totalAmount.toFixed(2)}`;
+      
+      // Show tax rows
+      document.getElementById('tax-row').style.display = 'flex';
+      document.getElementById('tax-location').style.display = 'flex';
 
       // Store tax info for booking submission
       if (bookingData) {
@@ -692,10 +706,19 @@
     }
 
     function populateOrderSummary() {
-      if (!bookingData) return;
+      if (!bookingData) {
+        console.error('No booking data found');
+        return;
+      }
 
+      console.log('Booking data:', bookingData);
       const service = bookingData.service;
       
+      if (!service) {
+        console.error('No service data found in booking data');
+        return;
+      }
+
       // Service icons
       const iconMap = {
         'tree-removal': '🪚',
@@ -708,7 +731,12 @@
       document.getElementById('summary-price').textContent = `$${service.price}`;
       
       // Calculate and display tax
-      calculateSalesTax(bookingData.customer.address, service.price);
+      if (bookingData.customer && bookingData.customer.address) {
+        calculateSalesTax(bookingData.customer.address, service.price);
+      } else {
+        // Fallback if no address - use default rate
+        calculateSalesTax('', service.price);
+      }
 
       // Update service type
       let serviceType = 'Professional tree care';
