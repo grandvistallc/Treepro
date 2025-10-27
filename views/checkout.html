@@ -645,13 +645,21 @@
 
       // Appointment details
       const appointmentDate = new Date(bookingData.date);
-      document.getElementById('appointment-date').textContent = appointmentDate.toLocaleDateString('en-US', {
+      const dateDisplay = appointmentDate.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       });
-      document.getElementById('appointment-time').textContent = bookingData.time;
+      
+      // Enhanced time display with more context
+      const timeDisplay = `${bookingData.time} (${getTimeContext(bookingData.time)})`;
+      
+      document.getElementById('appointment-date').textContent = dateDisplay;
+      document.getElementById('appointment-time').innerHTML = `
+        <strong style="color: var(--green); font-size: 1.1em;">${bookingData.time}</strong><br>
+        <small style="color: var(--gray-600); font-style: italic;">${getTimeContext(bookingData.time)}</small>
+      `;
       document.getElementById('service-address').textContent = customer.address;
 
       // Customer information
@@ -659,6 +667,23 @@
       document.getElementById('customer-phone').textContent = customer.phone;
       document.getElementById('customer-email').textContent = customer.email;
       document.getElementById('customer-notes').textContent = customer.notes || 'None provided';
+    }
+
+    // Helper function to provide context about the appointment time
+    function getTimeContext(time) {
+      const timeContexts = {
+        '8:00 AM': 'Early Morning Start - Our team will arrive promptly at 8:00 AM',
+        '9:00 AM': 'Morning Service - Perfect time to start your tree care project',
+        '10:00 AM': 'Mid-Morning Appointment - Ideal for most tree services',
+        '11:00 AM': 'Late Morning Service - Great timing for outdoor work',
+        '12:00 PM': 'Midday Appointment - Lunch time service slot',
+        '1:00 PM': 'Early Afternoon Service - Post-lunch appointment time',
+        '2:00 PM': 'Afternoon Appointment - Productive afternoon work slot',
+        '3:00 PM': 'Mid-Afternoon Service - Good timing for tree care',
+        '4:00 PM': 'Late Afternoon Appointment - End of day service slot'
+      };
+      
+      return timeContexts[time] || 'Professional tree service appointment time';
     }
 
     function confirmBooking() {
