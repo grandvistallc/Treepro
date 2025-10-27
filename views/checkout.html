@@ -691,19 +691,40 @@
       const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
       const serviceData = JSON.parse(sessionStorage.getItem('selectedService'));
       
+      // Format date and time clearly for Google Sheets
+      const appointmentDate = new Date(bookingData.date);
+      const formattedDate = appointmentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      // Create comprehensive date/time description
+      const dateTimeDescription = `${formattedDate} at ${bookingData.time}`;
+      const timeContext = getTimeContext(bookingData.time);
+      
       const dataToSend = {
+        timestamp: new Date().toLocaleString('en-US'),
         name: bookingData.customer.name,
         phone: bookingData.customer.phone,
         email: bookingData.customer.email,
+        address: bookingData.customer.address,
         serviceType: serviceData.packageName,
         quantity: serviceData.quantity || 1,
         propertySize: serviceData.size || '',
-        appointmentDate: bookingData.date,
+        appointmentDate: formattedDate,
         appointmentTime: bookingData.time,
+        appointmentDateTime: dateTimeDescription,
+        timeContext: timeContext,
         price: serviceData.price,
         addOns: serviceData.discountPercent > 0 ? `${serviceData.discountPercent}% bulk discount` : 'None',
-        notes: bookingData.customer.notes || ''
+        notes: bookingData.customer.notes || 'None',
+        confirmationNumber: 'TPR' + Date.now().toString().substr(-6)
       };
+      
+      // Log the data being sent for debugging
+      console.log('Booking data being sent to Google Sheets:', dataToSend);
       
       // Send to Google Apps Script
       const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6_F7RcrDZmUcM9GFTS8xmJhRmyrP5QHHwmtmikg-NfXx4Ye2gIgEPbP-rmKw0CGZfuA/exec';
