@@ -1,11 +1,11 @@
 /**
  * Google Sheets Integration for Unavailable Dates
- * This file handles fetching unavailable dates from a Google Sheet
+ * This file handles fetching unavailable dates from Google Sheets CSV export
  */
 
 class UnavailableDatesManager {
-  constructor(sheetUrl) {
-    this.sheetUrl = sheetUrl;
+  constructor(csvUrl) {
+    this.csvUrl = csvUrl;
     this.unavailableDates = new Set(); // For ALL DAY blocks
     this.unavailableTimes = new Map(); // For specific time blocks: date -> Set of times
     this.lastFetch = null;
@@ -13,7 +13,7 @@ class UnavailableDatesManager {
   }
 
   /**
-   * Fetch unavailable dates from Google Sheet
+   * Fetch unavailable dates from Google Sheet CSV export
    */
   async fetchUnavailableDates() {
     try {
@@ -24,30 +24,55 @@ class UnavailableDatesManager {
 
       console.log('Fetching unavailable dates from Google Sheets...');
       
-      const response = await fetch(this.sheetUrl);
-      const data = await response.json();
+      const response = await fetch(this.csvUrl + '&t=' + Date.now());
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const csvText = await response.text();
+      const lines = csvText.trim().split('\n');
       
       // Clear existing dates and times
       this.unavailableDates.clear();
       this.unavailableTimes.clear();
       
-      // Process the data
-      if (data.values && data.values.length > 1) { // Skip header row
-        data.values.slice(1).forEach(row => {
-          if (row[0]) { // Check if date cell has value
-            const dateStr = row[0];
-            const timeStr = row[1] || 'ALL DAY';
-            const reason = row[2] || 'Unavailable';
+      // Process CSV data (skip header row)
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        
+        const columns = lines[i].split(',');
+        const dateStr = columns[0]?.replace(/"/g, '').trim();
+        const timeStr = columns[1]?.replace(/"/g, '').trim() || 'ALL DAY';
+        const reason = columns[2]?.replace(/"/g, '').trim() || 'Unavailable';
+        
+        if (dateStr) {
+          // Parse date
+          const date = this.parseDate(dateStr);
+          if (date) {
+            const dateKey = this.formatDateKey(date);
             
-            // Parse date
-            const date = this.parseDate(dateStr);
-            if (date) {
-              const dateKey = this.formatDateKey(date);
-              
-              if (timeStr.toUpperCase() === 'ALL DAY') {
-                // Block entire day
-                this.unavailableDates.add(dateKey);
-                console.log(`Blocked entire day: ${dateKey} (${reason})`);
+            if (timeStr.toUpperCase() === 'ALL DAY') {
+              // Block entire day
+              this.unavailableDates.add(dateKey);
+              console.log(`Blocked entire day: ${dateKey} (${reason})`);
+            } else {
+              // Handle time ranges (e.g., "9:00 AM - 12:00 PM")
+              if (timeStr.includes(' - ')) {
+                const timeRange = timeStr.split(' - ');
+                if (timeRange.length === 2) {
+                  const startTime = timeRange[0].trim();
+                  const endTime = timeRange[1].trim();
+                  
+                  // Block all times in the range
+                  const timesInRange = this.getTimesInRange(startTime, endTime);
+                  if (!this.unavailableTimes.has(dateKey)) {
+                    this.unavailableTimes.set(dateKey, new Set());
+                  }
+                  timesInRange.forEach(time => {
+                    this.unavailableTimes.get(dateKey).add(time);
+                  });
+                  console.log(`Blocked time range: ${dateKey} from ${startTime} to ${endTime} (${reason})`);
+                }
               } else {
                 // Block specific time
                 if (!this.unavailableTimes.has(dateKey)) {
@@ -58,11 +83,11 @@ class UnavailableDatesManager {
               }
             }
           }
-        });
+        }
       }
       
       this.lastFetch = Date.now();
-      console.log(`Loaded ${this.unavailableDates.size} unavailable dates`);
+      console.log(`Loaded ${this.unavailableDates.size} unavailable dates and ${this.unavailableTimes.size} time-specific blocks`);
       
       return Array.from(this.unavailableDates);
       
@@ -71,6 +96,32 @@ class UnavailableDatesManager {
       // Return cached dates on error
       return Array.from(this.unavailableDates);
     }
+  }
+
+  /**
+   * Get all standard appointment times that fall within a time range
+   */
+  getTimesInRange(startTime, endTime) {
+    const allTimes = ['8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
+    
+    // Convert times to minutes for comparison
+    const parseTime = (timeStr) => {
+      const [time, period] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+      
+      if (period === 'PM' && hours !== 12) hours += 12;
+      if (period === 'AM' && hours === 12) hours = 0;
+      
+      return hours * 60 + (minutes || 0);
+    };
+
+    const startMinutes = parseTime(startTime);
+    const endMinutes = parseTime(endTime);
+
+    return allTimes.filter(time => {
+      const timeMinutes = parseTime(time);
+      return timeMinutes >= startMinutes && timeMinutes <= endMinutes;
+    });
   }
 
   /**
