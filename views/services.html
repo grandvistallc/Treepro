@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tree Services | TreePro Services Twin Cities</title>
-  <meta name="description" content="Professional tree services in the Twin Cities. Get your free estimate for tree removal, trimming, pruning, stump grinding, and fall yard cleanup services. Licensed and insured.">
+  <meta name="description" content="Professional tree services in the Twin Cities. Get your free estimate for tree removal, trimming, pruning, stump grinding, and fall yard cleanup services. Licensed and professional.">
 
   <!-- Favicon - Icon displayed in browser tab and bookmarks -->
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -639,8 +639,63 @@
       white-space: nowrap;
     }
 
+    /* Fall Special Badge */
+    .fall-special-badge {
+      position: absolute;
+      top: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--orange) 0%, #ea580c 100%);
+      color: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+      z-index: 10;
+      white-space: nowrap;
+      animation: fallSpecialPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes fallSpecialPulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4); }
+      50% { box-shadow: 0 6px 20px rgba(249, 115, 22, 0.6); }
+    }
+
+    /* Fall Special Pricing */
+    .fall-special-pricing {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--orange);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .fall-special-pricing .original-price {
+      text-decoration: line-through;
+      color: #6b7280;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .fall-special-pricing .special-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #92400e;
+      margin-bottom: 0.5rem;
+    }
+
+    .fall-special-pricing .savings-text {
+      color: #dc2626;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
     /* Add relative positioning to cards that have badges */
-    .popular-package {
+    .popular-package, .fall-special-package {
       position: relative;
     }
 
@@ -818,8 +873,12 @@
         </button>
         <div class="dropdown-content" id="yard-cleanup-dropdown">
           <div class="dropdown-description">Complete seasonal cleanup and property preparation</div>
-          <div class="dropdown-pricing">$50 base + $30/hour</div>
-          <button class="dropdown-select-btn" onclick="showServiceDetails('yard-cleanup')">Select This Service</button>
+          <div class="dropdown-pricing">
+            <div style="text-decoration: line-through; color: #6b7280; font-size: 0.9rem;">Regular: $110-$230</div>
+            <div style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">🍂 Fall Special: $60-$180!</div>
+            <div style="color: #059669; font-weight: 600; font-size: 0.8rem;">Base fee waived - Save $50!</div>
+          </div>
+          <button class="dropdown-select-btn" onclick="showServiceDetails('yard-cleanup')" style="background: linear-gradient(135deg, #F97316 0%, #ea580c 100%); color: white;">🍂 Select Fall Special</button>
         </div>
       </div>
 
@@ -853,51 +912,71 @@
 
     <div class="packages-grid" id="packages-grid" style="display: none;">
       <!-- Fall Yard Cleanup -->
-      <div class="package-card" data-package="yard-cleanup" data-aos="fade-up" data-aos-delay="100">
+      <div class="package-card fall-special-package" data-package="yard-cleanup" data-aos="fade-up" data-aos-delay="100">
+        <div class="fall-special-badge">🍂 FALL SPECIAL - $50 OFF!</div>
         <div class="package-header">
           <div class="package-icon">🍂</div>
           <h3 class="package-title">Fall Yard Cleanup</h3>
           <p class="package-subtitle">Complete seasonal cleanup and property preparation</p>
         </div>
 
+        <!-- Fall Special Pricing Notice -->
+        <div class="fall-special-pricing">
+          <div class="original-price">Regular: $110-$230 (with base fee)</div>
+          <div class="special-price">🍂 Fall Special: $60-$180 by yard size!</div>
+          <div class="savings-text">BASE FEE WAIVED - Save $50!</div>
+        </div>
+
         <div class="package-pricing">
-          <span class="package-price" id="yard-cleanup-price">$50</span>
-          <div class="price-label">Base fee + $30/hour</div>
+          <span class="package-price" id="yard-cleanup-price">$60</span>
+          <div class="price-label">Starting at (base fee waived!)</div>
         </div>
 
         <div class="urgency-options">
-          <label class="options-label">Estimated Time:</label>
-          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', '2-hours', 110)">
-            <input type="radio" name="yard-cleanup-size" value="2-hours" checked>
+          <label class="options-label">Property Size:</label>
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'up-to-quarter', 60)">
+            <input type="radio" name="yard-cleanup-size" value="up-to-quarter" checked>
             <div class="size-info">
-              <div class="size-name">2 Hours</div>
-              <div class="size-description">Small property, light cleanup</div>
+              <div class="size-name">Up to 0.25 acre</div>
+              <div class="size-description">Small yard</div>
             </div>
-            <div class="size-price">$110</div>
+            <div class="size-price">
+              <div style="text-decoration: line-through; color: #6b7280; font-size: 0.8rem;">$110</div>
+              <div style="color: #dc2626; font-weight: 700;">$60</div>
+            </div>
           </div>
-          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', '3-hours', 140)">
-            <input type="radio" name="yard-cleanup-size" value="3-hours">
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'quarter-to-half', 90)">
+            <input type="radio" name="yard-cleanup-size" value="quarter-to-half">
             <div class="size-info">
-              <div class="size-name">3 Hours</div>
-              <div class="size-description">Medium property, moderate cleanup</div>
+              <div class="size-name">0.25 – 0.5 acre</div>
+              <div class="size-description">Medium yard</div>
             </div>
-            <div class="size-price">$140</div>
+            <div class="size-price">
+              <div style="text-decoration: line-through; color: #6b7280; font-size: 0.8rem;">$140</div>
+              <div style="color: #dc2626; font-weight: 700;">$90</div>
+            </div>
           </div>
-          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', '4-hours', 170)">
-            <input type="radio" name="yard-cleanup-size" value="4-hours">
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'half-to-one', 120)">
+            <input type="radio" name="yard-cleanup-size" value="half-to-one">
             <div class="size-info">
-              <div class="size-name">4 Hours</div>
-              <div class="size-description">Large property, extensive cleanup</div>
+              <div class="size-name">0.5 – 1 acre</div>
+              <div class="size-description">Large yard</div>
             </div>
-            <div class="size-price">$170</div>
+            <div class="size-price">
+              <div style="text-decoration: line-through; color: #6b7280; font-size: 0.8rem;">$170</div>
+              <div style="color: #dc2626; font-weight: 700;">$120</div>
+            </div>
           </div>
-          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', '6-hours', 230)">
-            <input type="radio" name="yard-cleanup-size" value="6-hours">
+          <div class="urgency-option" onclick="selectUrgency('yard-cleanup', 'one-to-two-plus', 180)">
+            <input type="radio" name="yard-cleanup-size" value="one-to-two-plus">
             <div class="size-info">
-              <div class="size-name">6 Hours</div>
-              <div class="size-description">Extra large property, full cleanup</div>
+              <div class="size-name">1 – 2+ acres</div>
+              <div class="size-description">Extra large yard</div>
             </div>
-            <div class="size-price">$230</div>
+            <div class="size-price">
+              <div style="text-decoration: line-through; color: #6b7280; font-size: 0.8rem;">$230</div>
+              <div style="color: #dc2626; font-weight: 700;">$180</div>
+            </div>
           </div>
         </div>
 
@@ -913,16 +992,20 @@
 
         <div class="package-features">
           <ul class="features-list">
+            <li><span class="feature-check">🍂</span> <strong>FALL SPECIAL: $50 base fee waived!</strong></li>
             <li><span class="feature-check">✓</span> Complete leaf removal and disposal</li>
             <li><span class="feature-check">✓</span> Professional gutter cleaning</li>
             <li><span class="feature-check">✓</span> Debris removal (branches, twigs, etc.)</li>
             <li><span class="feature-check">✓</span> Walkway and driveway clearing</li>
             <li><span class="feature-check">✓</span> All organic waste hauled away</li>
-            <li><span class="feature-check">✓</span> $50 base fee + $30 per hour</li>
+            <li><span class="feature-check">💰</span> <strong>Priced by yard size - No base fee!</strong></li>
           </ul>
         </div>
 
-        <button class="package-button" onclick="selectPackage('yard-cleanup')">Select Yard Cleanup</button>
+        <button class="package-button" onclick="selectPackage('yard-cleanup')" style="background: linear-gradient(135deg, var(--orange) 0%, #ea580c 100%); position: relative; overflow: hidden;">
+          <span style="position: relative; z-index: 2;">🍂 Select Fall Special - Save $50!</span>
+          <span style="position: absolute; top: -20px; right: -10px; font-size: 2rem; opacity: 0.2; z-index: 1;">🍂</span>
+        </button>
       </div>
 
       <!-- Tree Removal Service -->
@@ -997,7 +1080,7 @@
             <li><span class="feature-check">✓</span> Complete debris cleanup and hauling</li>
             <li><span class="feature-check">✓</span> Stump grinding up to 6 inches below grade</li>
             <li><span class="feature-check">✓</span> Site restoration and cleanup</li>
-            <li><span class="feature-check">✓</span> Fully insured and licensed</li>
+            <li><span class="feature-check">✓</span> Licensed and professional</li>
           </ul>
         </div>
 
@@ -1116,12 +1199,12 @@
           name: 'Fall Yard Cleanup',
           icon: '🍂',
           urgency: {
-            '2-hours': { name: '2 Hours (Small property, light cleanup)', price: 110 },
-            '3-hours': { name: '3 Hours (Medium property, moderate cleanup)', price: 140 },
-            '4-hours': { name: '4 Hours (Large property, extensive cleanup)', price: 170 },
-            '6-hours': { name: '6 Hours (Extra large property, full cleanup)', price: 230 }
+            'up-to-quarter': { name: 'Up to 0.25 acre (Small yard)', price: 60 },
+            'quarter-to-half': { name: '0.25 – 0.5 acre (Medium yard)', price: 90 },
+            'half-to-one': { name: '0.5 – 1 acre (Large yard)', price: 120 },
+            'one-to-two-plus': { name: '1 – 2+ acres (Extra large yard)', price: 180 }
           },
-          defaultUrgency: '2-hours'
+          defaultUrgency: 'up-to-quarter'
         }
       }
     };
