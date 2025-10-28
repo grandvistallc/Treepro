@@ -846,7 +846,282 @@
       return timeContexts[time] || 'Professional tree service appointment time';
     }
 
-    function confirmBooking() {
+    // Validation function to prevent same-day and conflicting bookings
+    async function validateBooking() {
+      const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+      if (!bookingData) {
+        alert('Booking data not found. Please try again.');
+        return false;
+      }
+
+      // Show loading state
+      const confirmBtn = document.querySelector('button[onclick="confirmBooking()"]');
+      const originalText = confirmBtn.textContent;
+      confirmBtn.textContent = 'Checking availability...';
+      confirmBtn.disabled = true;
+
+      try {
+        const selectedDate = new Date(bookingData.date);
+        const today = new Date();
+        
+        // Reset time to compare dates only
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        // Check for same-day booking
+        if (selectedDate.getTime() === today.getTime()) {
+          showBookingError(
+            'Same-Day Booking Not Available',
+            'We require at least 24 hours notice for all appointments. Please select a date tomorrow or later.',
+            'Please choose a different date'
+          );
+          return false;
+        }
+
+        // Check for conflicts with existing bookings
+        const isConflict = await checkForBookingConflicts(bookingData.date, bookingData.time);
+        if (isConflict) {
+          showBookingError(
+            'Time Slot Already Booked',
+            `Sorry, the ${bookingData.time} time slot on ${new Date(bookingData.date).toLocaleDateString()} is no longer available.`,
+            'Please select a different time'
+          );
+          return false;
+        }
+
+        return true;
+      } catch (error) {
+        console.error('Error during validation:', error);
+        // Allow booking to proceed if validation fails
+        return true;
+      } finally {
+        // Restore button state
+        confirmBtn.textContent = originalText;
+        confirmBtn.disabled = false;
+      }
+    }
+
+    // Check for booking conflicts by querying both existing bookings and unavailable dates
+    async function checkForBookingConflicts(date, time) {
+      try {
+        const appointmentDate = new Date(date);
+        const formattedDateMDY = appointmentDate.toLocaleDateString('en-US', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric'
+        });
+        
+        const formattedDateLong = appointmentDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        console.log(`Checking conflicts for: ${formattedDateMDY} and ${formattedDateLong} at ${time}`);
+
+        // Check both sheets for conflicts
+        const bookingsUrl = 'https://docs.google.com/spreadsheets/d/1oB7T73PHL4gdmqG4ymG20ROdkARXsSRW1-XRiyc1pBg/export?format=csv&gid=0';
+        const unavailableUrl = 'https://docs.google.com/spreadsheets/d/1oB7T73PHL4gdmqG4ymG20ROdkARXsSRW1-XRiyc1pBg/export?format=csv&gid=903811488';
+        
+        // Check existing bookings sheet
+        try {
+          const bookingsResponse = await fetch(bookingsUrl + '&t=' + Date.now());
+          if (bookingsResponse.ok) {
+            const bookingsCsv = await bookingsResponse.text();
+            const bookingLines = bookingsCsv.trim().split('\n');
+            
+            // Skip header and check each booking
+            for (let i = 1; i < bookingLines.length; i++) {
+              if (!bookingLines[i].trim()) continue;
+              
+              const columns = bookingLines[i].split(',');
+              const csvAppointmentDate = columns[7]?.replace(/"/g, '').trim(); // Appointment Date column
+              const csvAppointmentTime = columns[8]?.replace(/"/g, '').trim(); // Appointment Time column
+              
+              console.log(`Checking existing booking: "${csvAppointmentDate}" vs "${formattedDateLong}", "${csvAppointmentTime}" vs "${time}"`);
+              
+              // Check if date and time match
+              if (csvAppointmentDate === formattedDateLong && csvAppointmentTime === time) {
+                console.log('Conflict found in existing bookings!');
+                return true;
+              }
+            }
+          }
+        } catch (error) {
+          console.warn('Could not check existing bookings:', error);
+        }
+
+        // Check unavailable dates sheet
+        try {
+          const unavailableResponse = await fetch(unavailableUrl + '&t=' + Date.now());
+          if (unavailableResponse.ok) {
+            const unavailableCsv = await unavailableResponse.text();
+            const unavailableLines = unavailableCsv.trim().split('\n');
+            
+            // Skip header and check each unavailable slot
+            for (let i = 1; i < unavailableLines.length; i++) {
+              if (!unavailableLines[i].trim()) continue;
+              
+              const columns = unavailableLines[i].split(',');
+              const csvDate = columns[0]?.replace(/"/g, '').trim();
+              const csvTime = columns[1]?.replace(/"/g, '').trim();
+              
+              console.log(`Checking unavailable slot: "${csvDate}" vs "${formattedDateMDY}", "${csvTime}" vs "${time}"`);
+              
+              // Check if this time slot is blocked
+              if (csvDate === formattedDateMDY && csvTime === time) {
+                console.log('Conflict found in unavailable dates!');
+                return true;
+              }
+              
+              // Also check for time ranges (e.g., "9:00 AM - 12:00 PM")
+              if (csvDate === formattedDateMDY && csvTime.includes(' - ')) {
+                const timeRange = csvTime.split(' - ');
+                if (timeRange.length === 2) {
+                  const startTime = timeRange[0].trim();
+                  const endTime = timeRange[1].trim();
+                  
+                  // Simple check if the requested time falls within the range
+                  // This is a basic implementation - could be enhanced for more precise time checking
+                  if (isTimeInRange(time, startTime, endTime)) {
+                    console.log('Conflict found in time range!');
+                    return true;
+                  }
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.warn('Could not check unavailable dates:', error);
+        }
+        
+        console.log('No conflict found');
+        return false;
+      } catch (error) {
+        console.error('Error checking conflicts:', error);
+        return false; // If error, allow booking to proceed
+      }
+    }
+
+    // Helper function to check if a time falls within a range
+    function isTimeInRange(checkTime, startTime, endTime) {
+      // Convert times to 24-hour format for comparison
+      const parseTime = (timeStr) => {
+        const [time, period] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        
+        if (period === 'PM' && hours !== 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+        
+        return hours * 60 + (minutes || 0); // Return minutes since midnight
+      };
+
+      const checkMinutes = parseTime(checkTime);
+      const startMinutes = parseTime(startTime);
+      const endMinutes = parseTime(endTime);
+
+      return checkMinutes >= startMinutes && checkMinutes <= endMinutes;
+    }
+
+    // Show booking error modal
+    function showBookingError(title, message, actionText) {
+      // Create error modal
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        font-family: 'Inter', sans-serif;
+      `;
+
+      modal.innerHTML = `
+        <div style="
+          background: white;
+          padding: 2rem;
+          border-radius: 16px;
+          max-width: 500px;
+          width: 90%;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          text-align: center;
+        ">
+          <div style="
+            width: 60px;
+            height: 60px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+          ">
+            <span style="font-size: 1.5rem; color: #dc2626;">⚠️</span>
+          </div>
+          
+          <h3 style="
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+          ">${title}</h3>
+          
+          <p style="
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+          ">${message}</p>
+          
+          <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button onclick="window.location.href='datetime.html'" style="
+              background: #10b981;
+              color: white;
+              border: none;
+              padding: 0.75rem 1.5rem;
+              border-radius: 8px;
+              font-weight: 600;
+              cursor: pointer;
+              font-size: 1rem;
+            ">${actionText}</button>
+            
+            <button onclick="this.closest('[style*=\"position: fixed\"]').remove()" style="
+              background: #f3f4f6;
+              color: #6b7280;
+              border: none;
+              padding: 0.75rem 1.5rem;
+              border-radius: 8px;
+              font-weight: 600;
+              cursor: pointer;
+              font-size: 1rem;
+            ">Cancel</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // Close on background click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    async function confirmBooking() {
+      // Validate booking before submission
+      const isValid = await validateBooking();
+      if (!isValid) {
+        return;
+      }
+
       // Prepare booking data to send to Google Sheet
       const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
       const serviceData = JSON.parse(sessionStorage.getItem('selectedService'));
