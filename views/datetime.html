@@ -286,17 +286,6 @@
       color: var(--orange);
     }
 
-    .time-option.unavailable {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: #f8fafc;
-    }
-
-    .time-option.unavailable:hover {
-      border-color: #e5e7eb;
-      background: #f8fafc;
-    }
-
     /* Contact Information */
     .form-group {
       margin-bottom: 1.5rem;
@@ -591,7 +580,11 @@
       } else if (serviceData.urgency) {
         const urgencyNames = {
           immediate: 'Immediate Response (Within 2 hours)',
-          'same-day': 'Same Day Service (Within 8 hours)'
+          'same-day': 'Same Day Service (Within 8 hours)',
+          'up-to-quarter': 'Up to 0.25 acre (Small yard)',
+          'quarter-to-half': '0.25 – 0.5 acre (Medium yard)',
+          'half-to-one': '0.5 – 1 acre (Large yard)',
+          'one-to-two-plus': '1 – 2+ acres (Extra large yard)'
         };
         description = urgencyNames[serviceData.urgency] || description;
       }
@@ -649,7 +642,7 @@
           
           // Check if date and time match
           if (csvAppointmentDate === formattedDateLong && csvAppointmentTime === time) {
-            console.log(`Existing booking found: ${formattedDateLong} at ${time}`);
+            console.log(`Time ${time} on ${formattedDateLong} is blocked (existing booking found)`);
             return true; // Time slot is already booked
           }
         }
@@ -725,25 +718,26 @@
       // Clear existing times
       timeGrid.innerHTML = '';
       
-      let times = [];
+      let allTimes = [];
       
       if (isEmergency) {
         // Emergency services available 24/7
-        times = [
+        allTimes = [
           '24/7', 'ASAP', 'Within 1hr', 'Within 2hrs',
           '8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM'
         ];
       } else {
         // Regular business hours - using standard time slots
-        times = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'];
+        allTimes = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'];
       }
       
-      // Generate time slots with async booking checks
-      for (const time of times) {
-        const timeElement = document.createElement('div');
+      // Filter out blocked times completely - they won't appear as options
+      let availableTimes = [];
+      
+      for (const time of allTimes) {
+        let isBlocked = false;
         
         // Check if this time is blocked for the selected date
-        let isBlocked = false;
         if (forDate && unavailableDatesManager && !isEmergency) {
           isBlocked = unavailableDatesManager.isTimeUnavailable(forDate, time);
         }
@@ -753,17 +747,66 @@
           isBlocked = await checkExistingBookings(forDate, time);
         }
         
-        timeElement.className = `time-option ${isBlocked ? 'unavailable' : ''}`;
-        timeElement.innerHTML = `
-          ${time}
-          ${isBlocked ? '<div class="unavailable-reason">Already Booked</div>' : ''}
-        `;
-        
+        // Only add time to available list if it's not blocked
         if (!isBlocked) {
-          timeElement.addEventListener('click', () => selectTime(time, timeElement));
+          availableTimes.push(time);
+        } else {
+          console.log(`Time slot ${time} is blocked and will not appear as an option`);
         }
-        
+      }
+      
+      // If no times are available, show a message
+      if (availableTimes.length === 0 && !isEmergency) {
+        const noTimesElement = document.createElement('div');
+        noTimesElement.className = 'no-times-message';
+        noTimesElement.innerHTML = `
+          <div style="
+            text-align: center; 
+            padding: 2rem; 
+            color: var(--gray-600); 
+            background: #f8f9fa; 
+            border-radius: 12px; 
+            border: 2px dashed #dee2e6;
+          ">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📅</div>
+            <h4 style="margin: 0 0 0.5rem 0; color: var(--gray-900);">No Available Times</h4>
+            <p style="margin: 0; line-height: 1.5;">
+              All time slots for this date are already booked.<br>
+              Please select a different date.
+            </p>
+          </div>
+        `;
+        timeGrid.appendChild(noTimesElement);
+        return;
+      }
+      
+      // Generate time slots only for available times
+      for (const time of availableTimes) {
+        const timeElement = document.createElement('div');
+        timeElement.className = 'time-option';
+        timeElement.innerHTML = time;
+        timeElement.addEventListener('click', () => selectTime(time, timeElement));
         timeGrid.appendChild(timeElement);
+      }
+      
+      // Add summary of available slots
+      if (availableTimes.length > 0 && !isEmergency) {
+        const summaryElement = document.createElement('div');
+        summaryElement.className = 'time-summary';
+        summaryElement.innerHTML = `
+          <div style="
+            text-align: center; 
+            margin-top: 1rem; 
+            padding: 0.75rem; 
+            background: #f0fdf4; 
+            border-radius: 8px; 
+            color: var(--green-dark);
+            font-size: 0.9rem;
+          ">
+            ✓ ${availableTimes.length} time slot${availableTimes.length !== 1 ? 's' : ''} available
+          </div>
+        `;
+        timeGrid.appendChild(summaryElement);
       }
     }
 
