@@ -581,64 +581,102 @@
 
     // Tax calculation based on customer address
     function calculateSalesTax(address, servicePrice) {
-      // Common county tax rates in Pennsylvania (adjust based on your state)
+      // Minnesota county tax rates (as of 2025)
       const countyTaxRates = {
-        'allegheny': 0.07,      // 7%
-        'philadelphia': 0.08,    // 8%
-        'montgomery': 0.06,     // 6%
-        'bucks': 0.06,          // 6%
-        'chester': 0.06,        // 6%
-        'delaware': 0.065,      // 6.5%
-        'lancaster': 0.06,      // 6%
-        'york': 0.06,           // 6%
-        'berks': 0.06,          // 6%
-        'lehigh': 0.065,        // 6.5%
-        'northampton': 0.065,   // 6.5%
-        'westmoreland': 0.06,   // 6%
-        'washington': 0.06,     // 6%
-        'beaver': 0.06,         // 6%
-        'butler': 0.06,         // 6%
-        'fayette': 0.06,        // 6%
-        'greene': 0.06,         // 6%
-        'indiana': 0.06,        // 6%
-        'armstrong': 0.06,      // 6%
-        'clarion': 0.06,        // 6%
-        'jefferson': 0.06,      // 6%
-        'forest': 0.06,         // 6%
-        'venango': 0.06,        // 6%
-        'mercer': 0.06,         // 6%
-        'lawrence': 0.06,       // 6%
-        'crawford': 0.06,       // 6%
-        'erie': 0.06,           // 6%
-        'warren': 0.06,         // 6%
-        'mckean': 0.06,         // 6%
-        'potter': 0.06,         // 6%
-        'tioga': 0.06,          // 6%
-        'bradford': 0.06,       // 6%
-        'susquehanna': 0.06,    // 6%
-        'wayne': 0.06,          // 6%
-        'pike': 0.06,           // 6%
-        'monroe': 0.06,         // 6%
-        'carbon': 0.06,         // 6%
-        'schuylkill': 0.06,     // 6%
-        'luzerne': 0.06,        // 6%
-        'lackawanna': 0.06,     // 6%
-        'wyoming': 0.06,        // 6%
-        'sullivan': 0.06,       // 6%
-        'columbia': 0.06,       // 6%
-        'montour': 0.06,        // 6%
-        'northumberland': 0.06, // 6%
-        'snyder': 0.06,         // 6%
-        'union': 0.06,          // 6%
-        'centre': 0.06,         // 6%
-        'clinton': 0.06,        // 6%
-        'lycoming': 0.06,       // 6%
-        'default': 0.06         // Default 6%
+        'aitkin': 0.07875,          // 7.875%
+        'anoka': 0.08375,           // 8.375%
+        'becker': 0.07875,          // 7.875%
+        'beltrami': 0.085,          // 8.5%
+        'benton': 0.07875,          // 7.875%
+        'big stone': 0.06875,       // 6.875%
+        'blue earth': 0.07875,      // 7.875%
+        'brown': 0.07875,           // 7.875%
+        'carlton': 0.08875,         // 8.875%
+        'carver': 0.09025,          // 9.025%
+        'cass': 0.08875,            // 8.875%
+        'chippewa': 0.07375,        // 7.375%
+        'chisago': 0.08375,         // 8.375%
+        'clay': 0.07875,            // 7.875%
+        'clearwater': 0.08,         // 8%
+        'cook': 0.08375,            // 8.375%
+        'cottonwood': 0.07875,      // 7.875%
+        'crow wing': 0.07875,       // 7.875%
+        'dakota': 0.08625,          // 8.625%
+        'dodge': 0.07375,           // 7.375%
+        'douglas': 0.07375,         // 7.375%
+        'faribault': 0.07375,       // 7.375%
+        'fillmore': 0.07625,        // 7.625%
+        'freeborn': 0.07875,        // 7.875%
+        'goodhue': 0.08125,         // 8.125%
+        'grant': 0.07375,           // 7.375%
+        'hennepin': 0.09875,        // 9.875% (Minneapolis area)
+        'houston': 0.07625,         // 7.625%
+        'hubbard': 0.08875,         // 8.875%
+        'isanti': 0.08125,          // 8.125%
+        'itasca': 0.08375,          // 8.375%
+        'jackson': 0.07875,         // 7.875%
+        'kanabec': 0.07375,         // 7.375%
+        'kandiyohi': 0.07875,       // 7.875%
+        'kittson': 0.07375,         // 7.375%
+        'koochiching': 0.07875,     // 7.875%
+        'lac qui parle': 0.06875,   // 6.875%
+        'lake': 0.08375,            // 8.375%
+        'lake of the woods': 0.07375, // 7.375%
+        'le sueur': 0.08375,        // 8.375%
+        'lincoln': 0.06875,         // 6.875%
+        'lyon': 0.07375,            // 7.375%
+        'mahnomen': 0.07375,        // 7.375%
+        'marshall': 0.07375,        // 7.375%
+        'martin': 0.07875,          // 7.875%
+        'mcleod': 0.08375,          // 8.375%
+        'meeker': 0.075,            // 7.5%
+        'mille lacs': 0.07375,      // 7.375%
+        'morrison': 0.075,          // 7.5%
+        'mower': 0.07875,           // 7.875%
+        'murray': 0.07875,          // 7.875%
+        'nicollet': 0.07875,        // 7.875%
+        'nobles': 0.07875,          // 7.875%
+        'norman': 0.07375,          // 7.375%
+        'olmsted': 0.08125,         // 8.125%
+        'otter tail': 0.07875,      // 7.875%
+        'pennington': 0.07375,      // 7.375%
+        'pine': 0.07875,            // 7.875%
+        'pipestone': 0.07375,       // 7.375%
+        'polk': 0.08375,            // 8.375%
+        'pope': 0.07375,            // 7.375%
+        'ramsey': 0.09875,          // 9.875% (St. Paul area)
+        'red lake': 0.07375,        // 7.375%
+        'redwood': 0.07375,         // 7.375%
+        'renville': 0.07375,        // 7.375%
+        'rice': 0.08375,            // 8.375%
+        'rock': 0.07375,            // 7.375%
+        'roseau': 0.08,             // 8%
+        'scott': 0.08375,           // 8.375%
+        'sherburne': 0.08125,       // 8.125%
+        'sibley': 0.08375,          // 8.375%
+        'st louis': 0.08875,        // 8.875% (Duluth area)
+        'saint louis': 0.08875,     // 8.875% (Alternative spelling)
+        'stearns': 0.085,           // 8.5%
+        'steele': 0.07875,          // 7.875%
+        'stevens': 0.06875,         // 6.875%
+        'swift': 0.07375,           // 7.375%
+        'todd': 0.075,              // 7.5%
+        'traverse': 0.06875,        // 6.875%
+        'wabasha': 0.07625,         // 7.625%
+        'wadena': 0.07875,          // 7.875%
+        'waseca': 0.07375,          // 7.375%
+        'washington': 0.08875,      // 8.875%
+        'watonwan': 0.07875,        // 7.875%
+        'wilkin': 0.07375,          // 7.375%
+        'winona': 0.07625,          // 7.625%
+        'wright': 0.08775,          // 8.775%
+        'yellow medicine': 0.07375, // 7.375%
+        'default': 0.06875          // Default Minnesota state rate (6.875%)
       };
 
       // Extract county from address (simple parsing)
       let county = 'default';
-      let taxLocation = 'Standard Rate';
+      let taxLocation = 'Minnesota Standard Rate';
       
       if (address) {
         const addressLower = address.toLowerCase();
@@ -647,35 +685,111 @@
         for (const [countyName, rate] of Object.entries(countyTaxRates)) {
           if (countyName !== 'default' && addressLower.includes(countyName)) {
             county = countyName;
-            taxLocation = countyName.charAt(0).toUpperCase() + countyName.slice(1) + ' County';
+            taxLocation = countyName.replace(/\b\w/g, l => l.toUpperCase()) + ' County, MN';
             break;
           }
         }
         
         // Also check for common city names that indicate counties
         const cityToCounty = {
-          'philadelphia': 'philadelphia',
-          'pittsburgh': 'allegheny',
-          'allentown': 'lehigh',
-          'erie': 'erie',
-          'reading': 'berks',
-          'scranton': 'lackawanna',
-          'bethlehem': 'northampton',
-          'lancaster': 'lancaster',
-          'harrisburg': 'dauphin',
-          'york': 'york',
-          'chester': 'chester',
-          'norristown': 'montgomery',
-          'wilkes-barre': 'luzerne'
+          'minneapolis': 'hennepin',
+          'saint paul': 'ramsey',
+          'st paul': 'ramsey',
+          'rochester': 'olmsted',
+          'duluth': 'st louis',
+          'bloomington': 'hennepin',
+          'brooklyn park': 'hennepin',
+          'plymouth': 'hennepin',
+          'woodbury': 'washington',
+          'st cloud': 'stearns',
+          'saint cloud': 'stearns',
+          'eagan': 'dakota',
+          'burnsville': 'dakota',
+          'eden prairie': 'hennepin',
+          'minnetonka': 'hennepin',
+          'blaine': 'anoka',
+          'lakeville': 'dakota',
+          'maple grove': 'hennepin',
+          'coon rapids': 'anoka',
+          'burnsville': 'dakota',
+          'apple valley': 'dakota',
+          'edina': 'hennepin',
+          'st louis park': 'hennepin',
+          'moorhead': 'clay',
+          'mankato': 'blue earth',
+          'shakopee': 'scott',
+          'cottage grove': 'washington',
+          'inver grove heights': 'dakota',
+          'roseville': 'ramsey',
+          'brooklyn center': 'hennepin',
+          'fridley': 'anoka',
+          'richfield': 'hennepin',
+          'prior lake': 'scott',
+          'maplewood': 'ramsey',
+          'new brighton': 'ramsey',
+          'crystal': 'hennepin',
+          'golden valley': 'hennepin',
+          'robbinsdale': 'hennepin',
+          'new hope': 'hennepin',
+          'hopkins': 'hennepin',
+          'st anthony': 'hennepin',
+          'columbia heights': 'anoka',
+          'white bear lake': 'ramsey',
+          'rosemount': 'dakota',
+          'chaska': 'carver',
+          'chanhassen': 'carver',
+          'austin': 'mower',
+          'faribault': 'rice',
+          'owatonna': 'steele',
+          'northfield': 'rice',
+          'albert lea': 'freeborn',
+          'winona': 'winona',
+          'red wing': 'goodhue',
+          'hastings': 'dakota',
+          'stillwater': 'washington',
+          'forest lake': 'washington',
+          'anoka': 'anoka',
+          'elk river': 'sherburne',
+          'ham lake': 'anoka',
+          'andover': 'anoka',
+          'ramsey': 'anoka',
+          'cambridge': 'isanti',
+          'isanti': 'isanti',
+          'monticello': 'wright',
+          'buffalo': 'wright',
+          'delano': 'wright',
+          'hutchinson': 'mcleod',
+          'willmar': 'kandiyohi',
+          'alexandria': 'douglas',
+          'brainerd': 'crow wing',
+          'little falls': 'morrison',
+          'st joseph': 'stearns',
+          'sartell': 'stearns',
+          'sauk rapids': 'benton',
+          'grand rapids': 'itasca',
+          'hibbing': 'st louis',
+          'virginia': 'st louis',
+          'eveleth': 'st louis',
+          'chisholm': 'st louis',
+          'international falls': 'koochiching',
+          'bemidji': 'beltrami',
+          'crookston': 'polk',
+          'thief river falls': 'pennington',
+          'fergus falls': 'otter tail',
+          'detroit lakes': 'becker',
+          'new ulm': 'brown',
+          'marshall': 'lyon',
+          'worthington': 'nobles',
+          'pipestone': 'pipestone',
+          'luverne': 'rock'
         };
         
         for (const [city, countyName] of Object.entries(cityToCounty)) {
           if (addressLower.includes(city)) {
             county = countyName;
-            taxLocation = city.charAt(0).toUpperCase() + city.slice(1) + ' (' + countyName.charAt(0).toUpperCase() + countyName.slice(1) + ' County)';
-            if (countyTaxRates[countyName]) {
-              county = countyName;
-            }
+            const cityProper = city.replace(/\b\w/g, l => l.toUpperCase());
+            const countyProper = countyName.replace(/\b\w/g, l => l.toUpperCase());
+            taxLocation = `${cityProper} (${countyProper} County, MN)`;
             break;
           }
         }
@@ -687,7 +801,7 @@
 
       // Update tax display - show tax rows and update values
       document.getElementById('summary-tax').textContent = `$${taxAmount.toFixed(2)}`;
-      document.getElementById('tax-county').textContent = taxLocation + ` (${(taxRate * 100).toFixed(1)}%)`;
+      document.getElementById('tax-county').textContent = taxLocation + ` (${(taxRate * 100).toFixed(3)}%)`;
       document.getElementById('total-amount').textContent = `$${totalAmount.toFixed(2)}`;
       
       // Show tax rows
