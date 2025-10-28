@@ -315,21 +315,24 @@
 
     /* Important Notice */
     .notice {
-      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-      color: #92400e;
-      padding: 1rem;
+      background: #f0fdf4;
+      border: 1px solid #22c55e;
       border-radius: 12px;
-      margin-bottom: 2rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
     }
 
     .notice h4 {
+      font-size: 1.125rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--gray-900);
     }
 
     .notice p {
-      font-size: 0.9rem;
-      line-height: 1.5;
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin: 0;
     }
 
     /* Buttons */
@@ -498,12 +501,31 @@
         </div>
       </div>
 
+      <!-- Fall Special Notice -->
+      <div id="fall-special-notice" class="notice" style="background: linear-gradient(135deg, #F97316 0%, #ea580c 100%); color: white; display: none; border: 3px solid #fed7aa; box-shadow: 0 8px 32px rgba(249, 115, 22, 0.4);">
+        <div style="text-align: center; margin-bottom: 1rem;">
+          <h4 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🍂 FALL SPECIAL - $50 BASE FEE WAIVED! 🍂</h4>
+          <div style="background: rgba(255,255,255,0.2); padding: 0.75rem; border-radius: 8px; font-size: 1.2rem; font-weight: bold;">
+            💰 YOU'RE SAVING $50.00! 💰
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+          <h5 style="margin-bottom: 0.75rem; font-size: 1.1rem;">🎉 What This Means For You:</h5>
+          <p style="margin: 0; line-height: 1.7;">
+            • <strong>NO $50 BASE FEE:</strong> We've completely waived the standard service call fee<br>
+            • <strong>PAY BY YARD SIZE:</strong> Simple pricing based on your property size<br>
+            • <strong>TRANSPARENT PRICING:</strong> No hidden costs or surprise charges<br>
+            • <strong>LIMITED TIME:</strong> This special offer expires at the end of fall season
+          </p>
+        </div>
+      </div>
+
       <!-- Important Notice -->
       <div class="notice">
         <h4>📋 Important Information</h4>
         <p>• A TreePro Services representative will contact you within 24 hours to confirm your appointment<br>
         • Please ensure the work area is accessible and free from obstacles<br>
-        • All work is fully insured and performed by certified arborists<br>
+        • All work is performed by certified arborists<br>
         • Weather conditions may affect scheduling - we'll notify you of any changes</p>
       </div>
 
@@ -532,8 +554,22 @@
 
         <div class="summary-section">
           <div class="summary-item">
-            <span class="summary-label">Base Price:</span>
+            <span class="summary-label">Service Price:</span>
             <span class="summary-value" id="summary-price">$0</span>
+          </div>
+          <div class="summary-item" id="base-fee-breakdown" style="display: none; font-size: 0.9em; color: var(--gray-600); margin-left: 1rem; border-left: 2px solid #f97316; padding-left: 0.75rem;">
+            <div style="margin-bottom: 0.25rem;">
+              <span class="summary-label">• Base Service Fee:</span>
+              <span class="summary-value" style="text-decoration: line-through;">$50.00</span>
+            </div>
+            <div>
+              <span class="summary-label">• Yard cleanup cost:</span>
+              <span class="summary-value" id="work-time-cost">$90.00</span>
+            </div>
+          </div>
+          <div class="summary-item" id="fall-special-discount" style="display: none; color: #dc2626; font-weight: 700; background: #fef2f2; padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0;">
+            <span class="summary-label">🍂 Fall Special Discount:</span>
+            <span class="summary-value">-$50.00 (BASE FEE WAIVED!)</span>
           </div>
           <div class="summary-item" id="tax-row" style="display: none;">
             <span class="summary-label">Sales Tax:</span>
@@ -546,9 +582,26 @@
         </div>
 
         <div class="total-price" id="total-amount">$0</div>
+        <div class="total-price" id="total-amount-fall-special" style="display: none; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #92400e; position: relative; overflow: hidden;">
+          <div style="position: relative; z-index: 2;">
+            <div style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">You Pay Only:</div>
+            <div id="fall-special-total">$0</div>
+            <div style="font-size: 0.9rem; font-weight: 500; margin-top: 0.25rem;">
+              🍂 Fall Special: $50 Saved!
+            </div>
+          </div>
+          <div style="position: absolute; top: -20px; right: -10px; font-size: 3rem; opacity: 0.2; z-index: 1;">🍂</div>
+        </div>
 
         <a href="thankyou.html" class="confirm-btn" id="confirm-btn" style="display: none;">
           Confirm & Book Service
+        </a>
+        <a href="thankyou.html" class="confirm-btn" id="confirm-btn-fall-special" style="display: none; background: linear-gradient(135deg, #F97316 0%, #ea580c 100%); position: relative; overflow: hidden;">
+          <div style="position: relative; z-index: 2;">
+            🍂 Confirm Fall Special Booking<br>
+            <small style="font-size: 0.85rem; opacity: 0.9;">(Save $50 - Base Fee Waived!)</small>
+          </div>
+          <div style="position: absolute; top: -50%; right: -20px; font-size: 4rem; opacity: 0.1; z-index: 1;">🍂</div>
         </a>
       </div>
     </div>
@@ -566,6 +619,7 @@
         try {
           bookingData = JSON.parse(storedData);
           console.log('Parsed booking data:', bookingData);
+          console.log('Service package:', bookingData.service?.package);
           populateOrderSummary();
           populateBookingDetails();
         } catch (error) {
@@ -837,19 +891,104 @@
       const iconMap = {
         'tree-removal': '🪚',
         'tree-trimming': '✂️',
+        'yard-cleanup': '🍂',
         'emergency-services': '🚨'
       };
 
+      // Check if this is a yard cleanup service (Fall Special applies)
+      const isYardCleanup = service.package === 'yard-cleanup';
+      console.log('Is yard cleanup?', isYardCleanup, 'Package:', service.package);
+      
       // Update summary
       document.getElementById('summary-service').textContent = service.packageName;
-      document.getElementById('summary-price').textContent = `$${service.price}`;
       
-      // Calculate and display tax
-      if (bookingData.customer && bookingData.customer.address) {
-        calculateSalesTax(bookingData.customer.address, service.price);
+      // Handle Fall Special pricing for yard cleanup
+      if (isYardCleanup) {
+        // For yard cleanup, the service.price already represents work-time-only (base fee already removed)
+        // Display the original full price (work time + base fee) for transparency
+        const originalFullPrice = parseFloat(service.price) + 50;
+        document.getElementById('summary-price').textContent = `$${originalFullPrice.toFixed(2)}`;
+        
+        // Show detailed breakdown of base fee + work time
+        const baseFeeBrkdown = document.getElementById('base-fee-breakdown');
+        if (baseFeeBrkdown) {
+          baseFeeBrkdown.style.display = 'block';
+          // The work time cost is the service.price itself (since base fee was already removed)
+          document.getElementById('work-time-cost').textContent = `$${service.price}`;
+        }
+        
+        // Show fall special discount
+        const fallSpecialElement = document.getElementById('fall-special-discount');
+        if (fallSpecialElement) {
+          fallSpecialElement.style.display = 'flex';
+        }
+        
+        // Show fall special confirm button
+        const regularBtn = document.getElementById('confirm-btn');
+        const fallSpecialBtn = document.getElementById('confirm-btn-fall-special');
+        if (regularBtn) regularBtn.style.display = 'none';
+        if (fallSpecialBtn) fallSpecialBtn.style.display = 'block';
+        
+        // The discounted price is the service.price itself (work-time only, base fee already waived)
+        const discountedPrice = parseFloat(service.price);
+        
+        // Store the discounted price for tax calculation
+        const priceForTax = discountedPrice;
+        
+        // Calculate and display tax on discounted price
+        if (bookingData.customer && bookingData.customer.address) {
+          calculateSalesTax(bookingData.customer.address, priceForTax);
+        } else {
+          calculateSalesTax('', priceForTax);
+        }
+        
+        // Update total display to show the fall special savings
+        const taxAmount = bookingData.tax ? bookingData.tax.amount : (priceForTax * 0.06875);
+        const finalTotal = priceForTax + taxAmount;
+        
+        // Show fall special total display
+        const regularTotal = document.getElementById('total-amount');
+        const fallSpecialTotal = document.getElementById('total-amount-fall-special');
+        if (regularTotal) regularTotal.style.display = 'none';
+        if (fallSpecialTotal) {
+          fallSpecialTotal.style.display = 'block';
+          document.getElementById('fall-special-total').textContent = `$${finalTotal.toFixed(2)}`;
+        }
+        
       } else {
-        // Fallback if no address - use default rate
-        calculateSalesTax('', service.price);
+        // Regular pricing for non-yard cleanup services
+        document.getElementById('summary-price').textContent = `$${service.price}`;
+        
+        // Hide base fee breakdown
+        const baseFeeBrkdown = document.getElementById('base-fee-breakdown');
+        if (baseFeeBrkdown) {
+          baseFeeBrkdown.style.display = 'none';
+        }
+        
+        // Hide fall special discount
+        const fallSpecialElement = document.getElementById('fall-special-discount');
+        if (fallSpecialElement) {
+          fallSpecialElement.style.display = 'none';
+        }
+        
+        // Show regular confirm button
+        const regularBtn = document.getElementById('confirm-btn');
+        const fallSpecialBtn = document.getElementById('confirm-btn-fall-special');
+        if (regularBtn) regularBtn.style.display = 'block';
+        if (fallSpecialBtn) fallSpecialBtn.style.display = 'none';
+        
+        // Show regular total display
+        const regularTotal = document.getElementById('total-amount');
+        const fallSpecialTotal = document.getElementById('total-amount-fall-special');
+        if (regularTotal) regularTotal.style.display = 'block';
+        if (fallSpecialTotal) fallSpecialTotal.style.display = 'none';
+        
+        // Calculate and display tax on full price
+        if (bookingData.customer && bookingData.customer.address) {
+          calculateSalesTax(bookingData.customer.address, service.price);
+        } else {
+          calculateSalesTax('', service.price);
+        }
       }
 
       // Update service type
@@ -868,9 +1007,10 @@
         const urgencyNames = {
           immediate: 'Immediate Response',
           'same-day': 'Same Day Service',
-          'small-property': 'Small Property (Under 0.5 acre)',
-          'medium-property': 'Medium Property (0.5-1 acre)',
-          'large-property': 'Large Property (1+ acres)'
+          'up-to-quarter': 'Up to 0.25 acre (Small yard)',
+          'quarter-to-half': '0.25 – 0.5 acre (Medium yard)',
+          'half-to-one': '0.5 – 1 acre (Large yard)',
+          'one-to-two-plus': '1 – 2+ acres (Extra large yard)'
         };
         serviceType = urgencyNames[service.urgency];
       }
@@ -895,7 +1035,10 @@
       document.getElementById('service-name').textContent = service.packageName;
       
       let description = 'Professional tree care service';
-      if (service.size) {
+      if (service.package === 'yard-cleanup') {
+        // Special description for fall cleanup with base fee waiver
+        description = '🍂 Fall Special: $50 base fee waived! Pricing based on yard size.';
+      } else if (service.size) {
         const sizeNames = {
           small: 'Small Tree (Under 30ft)',
           medium: 'Medium Tree (30-60ft)',
@@ -909,9 +1052,10 @@
         const urgencyNames = {
           immediate: 'Immediate Response (Within 2 hours)',
           'same-day': 'Same Day Service (Within 8 hours)',
-          'small-property': 'Small Property (Under 0.5 acre)',
-          'medium-property': 'Medium Property (0.5-1 acre)',
-          'large-property': 'Large Property (1+ acres)'
+          'up-to-quarter': 'Up to 0.25 acre (Small yard)',
+          'quarter-to-half': '0.25 – 0.5 acre (Medium yard)',
+          'half-to-one': '0.5 – 1 acre (Large yard)',
+          'one-to-two-plus': '1 – 2+ acres (Extra large yard)'
         };
         description = urgencyNames[service.urgency];
       }
@@ -941,6 +1085,16 @@
       document.getElementById('customer-phone').textContent = customer.phone;
       document.getElementById('customer-email').textContent = customer.email;
       document.getElementById('customer-notes').textContent = customer.notes || 'None provided';
+      
+      // Show/hide fall special notice based on service type
+      const fallSpecialNotice = document.getElementById('fall-special-notice');
+      if (fallSpecialNotice) {
+        if (service.package === 'yard-cleanup') {
+          fallSpecialNotice.style.display = 'block';
+        } else {
+          fallSpecialNotice.style.display = 'none';
+        }
+      }
     }
 
     // Helper function to provide context about the appointment time
@@ -1260,10 +1414,16 @@
         year: 'numeric'
       });
       
+      // Check if this is a fall special (yard cleanup)
+      const isFallSpecial = serviceData.package === 'yard-cleanup';
+      const fallSpecialDiscount = isFallSpecial ? 50 : 0;
+      const originalPrice = parseFloat(serviceData.price);
+      const discountedPrice = isFallSpecial ? Math.max(0, originalPrice - 50) : originalPrice;
+      
       // Get tax information from booking data
       const taxInfo = bookingData.tax || {};
-      const taxAmount = taxInfo.amount || (parseFloat(serviceData.price) * 0.06);
-      const totalAmount = taxInfo.total || (parseFloat(serviceData.price) + taxAmount);
+      const taxAmount = taxInfo.amount || (discountedPrice * 0.06875);
+      const totalAmount = taxInfo.total || (discountedPrice + taxAmount);
       
       const dataToSend = {
         timestamp: new Date().toLocaleString('en-US'),
@@ -1278,9 +1438,12 @@
         appointmentTime: bookingData.time,
         appointmentDateTime: dateTimeDescription,
         timeContext: timeContext,
-        price: serviceData.price,
-        taxLocation: taxInfo.location || 'Standard Rate',
-        taxRate: taxInfo.rate ? `${(taxInfo.rate * 100).toFixed(1)}%` : '6.0%',
+        originalPrice: originalPrice.toFixed(2),
+        fallSpecialDiscount: isFallSpecial ? fallSpecialDiscount.toFixed(2) : '0.00',
+        discountedPrice: discountedPrice.toFixed(2),
+        specialOffer: isFallSpecial ? 'Fall Special - Base Fee Waived ($50 off)' : 'None',
+        taxLocation: taxInfo.location || 'Minnesota Standard Rate',
+        taxRate: taxInfo.rate ? `${(taxInfo.rate * 100).toFixed(3)}%` : '6.875%',
         taxAmount: taxAmount.toFixed(2),
         totalAmount: totalAmount.toFixed(2),
         addOns: serviceData.discountPercent > 0 ? `${serviceData.discountPercent}% bulk discount` : 'None',
@@ -1320,8 +1483,9 @@
       });
     }
 
-    // Initialize page
+    // Initialize the page when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('Page loaded, initializing checkout...');
       loadBookingData();
     });
   </script>
