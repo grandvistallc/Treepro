@@ -601,7 +601,7 @@
 
     // Initialize unavailable dates manager
     // REPLACE THIS URL WITH YOUR GOOGLE SHEETS CSV EXPORT URL
-    const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/gviz/tq?tqx=out:json&sheet=UnavailableDates';
+    const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1oB7T73PHL4gdmqG4ymG20ROdkARXsSRW1-XRiyc1pBg/export?format=csv&gid=903811488';
     let unavailableDatesManager = null;
     
     // Initialize the unavailable dates system
@@ -613,6 +613,51 @@
       } catch (error) {
         console.error('Failed to load unavailable dates:', error);
         // Continue without blocking dates if fetch fails
+      }
+    }
+
+    // Check for existing bookings at a specific date and time
+    async function checkExistingBookings(date, time) {
+      try {
+        const appointmentDate = new Date(date);
+        const formattedDateLong = appointmentDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        // Check existing bookings sheet
+        const bookingsUrl = 'https://docs.google.com/spreadsheets/d/1oB7T73PHL4gdmqG4ymG20ROdkARXsSRW1-XRiyc1pBg/export?format=csv&gid=0';
+        
+        const response = await fetch(bookingsUrl + '&t=' + Date.now());
+        if (!response.ok) {
+          console.warn('Could not fetch existing bookings');
+          return false; // If we can't check, allow booking to proceed
+        }
+        
+        const csvText = await response.text();
+        const lines = csvText.trim().split('\n');
+        
+        // Skip header and check each booking
+        for (let i = 1; i < lines.length; i++) {
+          if (!lines[i].trim()) continue;
+          
+          const columns = lines[i].split(',');
+          const csvAppointmentDate = columns[7]?.replace(/"/g, '').trim(); // Appointment Date column
+          const csvAppointmentTime = columns[8]?.replace(/"/g, '').trim(); // Appointment Time column
+          
+          // Check if date and time match
+          if (csvAppointmentDate === formattedDateLong && csvAppointmentTime === time) {
+            console.log(`Existing booking found: ${formattedDateLong} at ${time}`);
+            return true; // Time slot is already booked
+          }
+        }
+        
+        return false; // No conflict found
+      } catch (error) {
+        console.error('Error checking existing bookings:', error);
+        return false; // If error, allow booking to proceed
       }
     }
 
@@ -640,18 +685,21 @@
         
         // Check various unavailability conditions
         const isSunday = date.getDay() === 0;
+        const isToday = i === 0; // Same day booking prevention
         const isUnavailableFromSheet = unavailableDatesManager ? 
           unavailableDatesManager.isDateUnavailable(date) : false;
-        const isUnavailable = (!isEmergency && isSunday) || isUnavailableFromSheet;
+        
+        // Prevent same-day bookings for all services, but allow Sundays
+        const isUnavailable = isToday || isUnavailableFromSheet;
         
         const dateElement = document.createElement('div');
         dateElement.className = `date-option ${isUnavailable ? 'unavailable' : ''}`;
         
         let unavailableReason = '';
-        if (isUnavailableFromSheet) {
+        if (isToday) {
+          unavailableReason = 'Requires 24hr Notice';
+        } else if (isUnavailableFromSheet) {
           unavailableReason = 'Not Available';
-        } else if (isSunday && !isEmergency) {
-          unavailableReason = 'Closed Sundays';
         }
         
         dateElement.innerHTML = `
@@ -662,7 +710,7 @@
         `;
         
         if (!isUnavailable) {
-          dateElement.addEventListener('click', () => selectDate(date, dateElement));
+          dateElement.addEventListener('click', async () => await selectDate(date, dateElement));
         }
         
         dateGrid.appendChild(dateElement);
@@ -670,7 +718,7 @@
     }
 
     // Generate available times based on selected date
-    function generateTimes(forDate = null) {
+    async function generateTimes(forDate = null) {
       const timeGrid = document.getElementById('time-grid');
       const isEmergency = serviceData && serviceData.package === 'emergency-services';
       
@@ -690,7 +738,8 @@
         times = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'];
       }
       
-      times.forEach(time => {
+      // Generate time slots with async booking checks
+      for (const time of times) {
         const timeElement = document.createElement('div');
         
         // Check if this time is blocked for the selected date
@@ -699,10 +748,15 @@
           isBlocked = unavailableDatesManager.isTimeUnavailable(forDate, time);
         }
         
+        // Also check for existing bookings (not just unavailable dates)
+        if (!isBlocked && forDate && !isEmergency) {
+          isBlocked = await checkExistingBookings(forDate, time);
+        }
+        
         timeElement.className = `time-option ${isBlocked ? 'unavailable' : ''}`;
         timeElement.innerHTML = `
           ${time}
-          ${isBlocked ? '<div class="unavailable-reason">Not Available</div>' : ''}
+          ${isBlocked ? '<div class="unavailable-reason">Already Booked</div>' : ''}
         `;
         
         if (!isBlocked) {
@@ -710,10 +764,10 @@
         }
         
         timeGrid.appendChild(timeElement);
-      });
+      }
     }
 
-    function selectDate(date, element) {
+    async function selectDate(date, element) {
       // Remove selection from other dates
       document.querySelectorAll('.date-option').forEach(el => {
         el.classList.remove('selected');
@@ -730,7 +784,7 @@
       selectedTime = null;
       
       // Regenerate times for the selected date
-      generateTimes(date);
+      await generateTimes(date);
       
       checkFormCompletion();
     }
@@ -878,7 +932,7 @@
       
       loadServiceData();
       await generateDates(); // Now async
-      generateTimes();
+      await generateTimes();
       
       // Add input event listeners
       const inputs = ['name', 'phone', 'email', 'address'];
