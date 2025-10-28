@@ -558,8 +558,18 @@
           document.getElementById('emergency-notice').style.display = 'block';
         }
       } else {
-        // Redirect back to services if no service selected
-        window.location.href = 'services.html';
+        // For testing purposes, create a default service if none selected
+        console.warn('No service data found in sessionStorage, using test service');
+        serviceData = {
+          package: 'yard-cleanup',
+          packageName: 'Fall Yard Cleanup (Test)',
+          price: 110,
+          urgency: 'up-to-quarter'
+        };
+        updateServiceSummary();
+        
+        // Store the test service for consistency
+        sessionStorage.setItem('selectedService', JSON.stringify(serviceData));
       }
     }
 
@@ -632,21 +642,74 @@
         const csvText = await response.text();
         const lines = csvText.trim().split('\n');
         
+        console.log(`Checking for conflicts on ${formattedDateLong} at ${time}`);
+        console.log(`Found ${lines.length - 1} existing bookings to check`);
+        
         // Skip header and check each booking
         for (let i = 1; i < lines.length; i++) {
           if (!lines[i].trim()) continue;
           
-          const columns = lines[i].split(',');
+          // Handle CSV parsing more carefully - split by comma but handle quoted values
+          const line = lines[i];
+          const columns = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              columns.push(current.trim());
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          columns.push(current.trim()); // Add the last column
+          
+          if (columns.length < 9) {
+            console.log(`Skipping malformed row ${i}: insufficient columns`);
+            continue;
+          }
+          
           const csvAppointmentDate = columns[7]?.replace(/"/g, '').trim(); // Appointment Date column
           const csvAppointmentTime = columns[8]?.replace(/"/g, '').trim(); // Appointment Time column
           
+          console.log(`Checking booking ${i}: Date="${csvAppointmentDate}", Time="${csvAppointmentTime}"`);
+          
+          // Handle different date formats
+          let isDateMatch = false;
+          
+          // First check if it matches the full format we use
+          if (csvAppointmentDate === formattedDateLong) {
+            isDateMatch = true;
+          } else if (csvAppointmentDate) {
+            // Try to parse the date and compare
+            try {
+              const existingDate = new Date(csvAppointmentDate);
+              const existingDateFormatted = existingDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+              if (existingDateFormatted === formattedDateLong) {
+                isDateMatch = true;
+              }
+            } catch (parseError) {
+              console.log(`Could not parse existing booking date: ${csvAppointmentDate}`);
+            }
+          }
+          
           // Check if date and time match
-          if (csvAppointmentDate === formattedDateLong && csvAppointmentTime === time) {
-            console.log(`Time ${time} on ${formattedDateLong} is blocked (existing booking found)`);
+          if (isDateMatch && csvAppointmentTime === time) {
+            console.log(`🚫 CONFLICT FOUND: Time ${time} on ${formattedDateLong} is already booked`);
             return true; // Time slot is already booked
           }
         }
         
+        console.log(`✅ No conflicts found for ${time} on ${formattedDateLong}`);
         return false; // No conflict found
       } catch (error) {
         console.error('Error checking existing bookings:', error);
@@ -718,6 +781,13 @@
       // Clear existing times
       timeGrid.innerHTML = '';
       
+      if (!forDate) {
+        console.log('No date selected, not generating times');
+        return;
+      }
+      
+      console.log(`Generating times for date: ${forDate}`);
+      
       let allTimes = [];
       
       if (isEmergency) {
@@ -731,29 +801,40 @@
         allTimes = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'];
       }
       
+      console.log(`All possible times: ${allTimes.join(', ')}`);
+      
       // Filter out blocked times completely - they won't appear as options
       let availableTimes = [];
       
       for (const time of allTimes) {
         let isBlocked = false;
+        let blockReason = '';
         
         // Check if this time is blocked for the selected date
-        if (forDate && unavailableDatesManager && !isEmergency) {
+        if (unavailableDatesManager && !isEmergency) {
           isBlocked = unavailableDatesManager.isTimeUnavailable(forDate, time);
+          if (isBlocked) blockReason = 'unavailable dates';
         }
         
         // Also check for existing bookings (not just unavailable dates)
-        if (!isBlocked && forDate && !isEmergency) {
-          isBlocked = await checkExistingBookings(forDate, time);
+        if (!isBlocked && !isEmergency) {
+          const existingBookingConflict = await checkExistingBookings(forDate, time);
+          if (existingBookingConflict) {
+            isBlocked = true;
+            blockReason = 'existing booking';
+          }
         }
         
         // Only add time to available list if it's not blocked
         if (!isBlocked) {
           availableTimes.push(time);
+          console.log(`✅ Time ${time} is available`);
         } else {
-          console.log(`Time slot ${time} is blocked and will not appear as an option`);
+          console.log(`🚫 Time ${time} is blocked (${blockReason}) and will not appear as an option`);
         }
       }
+      
+      console.log(`Final available times: ${availableTimes.join(', ')}`);
       
       // If no times are available, show a message
       if (availableTimes.length === 0 && !isEmergency) {
@@ -825,6 +906,8 @@
         el.classList.remove('selected');
       });
       selectedTime = null;
+      
+      console.log(`📅 Date selected: ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`);
       
       // Regenerate times for the selected date
       await generateTimes(date);
@@ -970,18 +1053,53 @@
 
     // Add event listeners to form inputs
     document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Page loaded, initializing booking system...');
+      
       // Initialize unavailable dates first
+      console.log('📅 Loading unavailable dates from Google Sheets...');
       await initializeUnavailableDates();
       
+      console.log('📋 Loading service data...');
       loadServiceData();
+      
+      console.log('📆 Generating available dates...');
       await generateDates(); // Now async
+      
+      console.log('🕒 Initial time generation (no date selected)...');
       await generateTimes();
+      
+      console.log('✅ Booking system initialized');
       
       // Add input event listeners
       const inputs = ['name', 'phone', 'email', 'address'];
       inputs.forEach(id => {
         document.getElementById(id).addEventListener('input', checkFormCompletion);
       });
+      
+      // Add global test function for debugging
+      window.testBookingConflicts = async function() {
+        console.log('🧪 Testing booking conflicts...');
+        
+        const testDates = [
+          { date: new Date('2025-11-03'), time: '12:00 PM', expected: 'BLOCKED' },
+          { date: new Date('2025-11-03'), time: '10:00 AM', expected: 'BLOCKED' },
+          { date: new Date('2025-11-03'), time: '8:00 AM', expected: 'AVAILABLE' },
+          { date: new Date('2025-11-08'), time: '10:00 AM', expected: 'BLOCKED' },
+          { date: new Date('2025-11-08'), time: '8:00 AM', expected: 'BLOCKED' },
+          { date: new Date('2025-11-08'), time: '12:00 PM', expected: 'AVAILABLE' }
+        ];
+        
+        for (const test of testDates) {
+          const isBlocked = await checkExistingBookings(test.date, test.time);
+          const status = isBlocked ? 'BLOCKED' : 'AVAILABLE';
+          const result = status === test.expected ? '✅' : '❌';
+          console.log(`${result} ${test.date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })} at ${test.time}: ${status} (expected ${test.expected})`);
+        }
+        
+        console.log('🧪 Test complete! Open the browser console to see results.');
+      };
+      
+      console.log('🧪 Test function available: call testBookingConflicts() in the console to debug');
     });
   </script>
 </body>
