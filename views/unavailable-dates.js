@@ -193,12 +193,19 @@ class UnavailableDatesManager {
     
     // If entire day is blocked, all times are unavailable
     if (this.unavailableDates.has(dateKey)) {
+      console.log(`Time ${time} on ${dateKey} is blocked (entire day blocked)`);
       return true;
     }
     
     // Check if specific time is blocked
     const blockedTimes = this.unavailableTimes.get(dateKey);
-    return blockedTimes ? blockedTimes.has(time) : false;
+    const isBlocked = blockedTimes ? blockedTimes.has(time) : false;
+    
+    if (isBlocked) {
+      console.log(`Time ${time} on ${dateKey} is blocked (specific time block)`);
+    }
+    
+    return isBlocked;
   }
 
   /**
